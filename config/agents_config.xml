@@ -1,0 +1,89 @@
+<agents>
+    <externalAgent name="YesNoAgent">
+		<labels>
+			<label score='1.0'>QUESTION</label>
+			<label score='1.0'>YN_QUESTION</label>
+		</labels>
+	</externalAgent>
+    <externalAgent name="OrAgent">
+		<labels>
+			<label score='1.0'>QUESTION</label>
+			<label score='1.0'>OR_QUESTION</label>
+		</labels>
+	</externalAgent>
+    <externalAgent name="CosineAgent">
+		<labels>
+			<label score='1.0'>QUESTION</label>
+			<label score='1.0'>NON_QUESTION</label>
+		</labels>
+	</externalAgent>
+    <externalAgent name="DiscordAgent">
+		<labels>
+			<label score='1.0'>QUESTION</label>
+			<label score='1.0'>NON_QUESTION</label>
+		</labels>
+	</externalAgent>
+    <externalAgent name="EdgarAgent">
+		<labels>
+			<label score='0.2'>QUESTION</label>
+			<label score='0.2'>PERSONAL</label>
+			<label score='0.2'>IMPERSONAL</label>
+			<label score='1.0'>AGENT_LIFE</label>
+			<label score='1.0'>AGENT_PERSONAL</label>
+			<label score='1.0'>MONSERRATE_INTERIOR</label>
+			<label score='1.0'>MONSERRATE_HISTORY</label>
+			<label score='1.0'>MONSERRATE_LOGISTIC</label>
+			<label score='1.0'>MONSERRATE_PEOPLE</label>
+			<label score='1.0'>MONSERRATE_REBUILD</label>
+			<label score='1.0'>MONSERRATE_CHARACTERISTICS</label>
+		</labels>
+	</externalAgent>
+    <externalAgent name="GrootAgent">
+		<labels>
+			<label score='1.0'>QUESTION</label>
+			<label score='1.0'>NON_QUESTION</label>
+		</labels>
+	</externalAgent>
+    <externalAgent name="JaccardAgent">
+		<labels>
+			<label score='1.0'>QUESTION</label>
+			<label score='1.0'>NON_QUESTION</label>
+		</labels>
+	</externalAgent>
+    <externalAgent name="LevenshteinAgent">
+		<labels>
+			<label score='1.0'>QUESTION</label>
+			<label score='1.0'>NON_QUESTION</label>
+		</labels>
+	</externalAgent>
+    <externalAgent name="KMeansAgent">
+		<labels>
+			<label score='1.0'>QUESTION</label>
+			<label score='1.0'>NON_QUESTION</label>
+		</labels>
+	</externalAgent>
+	<agent>
+		<classname>talkpedia</classname>
+		<dialogMethod>inquiry</dialogMethod>
+		<folderName>talkpedia</folderName>
+		<labels>
+			<label score='1.0'>QUESTION</label>
+			<label score='1.0'>IMPERSONAL</label>
+		</labels>
+		<escapeSentences>
+			<escapeSentence>no results found for:</escapeSentence>
+		</escapeSentences>
+	</agent>
+	<agent>
+		<classname>cheat_agent</classname>
+		<dialogMethod>cheating_dialog</dialogMethod>
+		<folderName>cheat</folderName>
+		<labels>
+			<label score='0.5'>OR_QUESTION</label>
+			<label score='0.8'>YN_QUESTION</label>
+		</labels>
+		<escapeSentences>
+			<escapeSentence>Essa não é a minha área de especialidade.</escapeSentence>
+		</escapeSentences>
+	</agent>
+</agents>
