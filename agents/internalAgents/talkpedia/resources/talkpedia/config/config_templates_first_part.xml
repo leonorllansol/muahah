@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<languageTemplates>
+		<MathematicsTemplates>
+			<template>Matemática nunca foi o meu forte. Damos um novo rumo à conversa?</template>
+			<template>Lamento, mas nunca fui bom a matemática. Mudamos de assunto?</template>
+		</MathematicsTemplates>
+		<MiscTemplates>
+			<template>Por acaso não sabia. Já aprendi qualquer coisa hoje.</template>
+			<template>Está-me a dar uma novidade. Já aprendi qualquer coisa hoje.</template>
+		</MiscTemplates>
+		<NewQuestionRequestTemplates>
+			<template>Não percebi bem a pergunta. Pode reformulá-la?</template>
+			<template>Lamento, mas não compreendi a questão. Pode reformulá-la?</template>
+		</NewQuestionRequestTemplates>
+		<PersonalQuestionTemplates>
+			<template>Preferia não falar de mim nem das minhas preferências pessoais. Que tal darmos um novo rumo a esta conversa?</template>
+			<template>Não estou com vontade de falar sobre mim. Que tal falarmos de outro assunto?</template>
+			<template>Não falemos sobre mim. Mudamos de assunto?</template>
+		</PersonalQuestionTemplates>
+		<QuestionSwitchingTemplates>
+			<template>Boa pergunta. Infelizmente não estou a par disso. Falamos de outro assunto?</template>
+			<template>Infelizmente esse tema está fora da minha área de especialidade. Falamos de outro assunto?</template>
+			<template>Sinceramente, este não é o meu tema predilecto. Podemos falar de outro assunto?</template>
+		</QuestionSwitchingTemplates>
+		<AnswerAttemptQuestionFirstPartTemplate>
+			<template>Essa temática não é bem a minha especialidade, mas</template>
+			<template>Não sou um grande perito nesse tema, mas</template>
+			<template>Apesar de essa não ser a minha especialidade,</template>
+			<template>Não tenho a certeza, mas</template>
+		</AnswerAttemptQuestionFirstPartTemplate>
+		<AnswerAttemptQuestionSecondPartTemplate>
+			<template>consta que</template>
+			<template>posso dizer que</template>
+			<template>sei que</template>
+			<template>pelo que sei</template>
+		</AnswerAttemptQuestionSecondPartTemplate>
+	</languageTemplates>
+</config>
+
