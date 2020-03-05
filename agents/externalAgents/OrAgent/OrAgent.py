@@ -16,6 +16,8 @@ class OrAgent:
 
 
     def requestAnswer(self,userInput,candidates):
+        for c in candidates:
+            c.addScore(self.agentName, 0)
         if ("ou" in userInput.split()):
             np_before_or = noun_chunks.get_noun_phrase_before_or(userInput)
             np_after_or = noun_chunks.get_noun_phrase_after_or(userInput)
@@ -43,5 +45,3 @@ class OrAgent:
         return finalAnswer
 
 
-    def getFinalScore(self,questionScore,answerScore):
-        return questionScore * self.questionSimValue + answerScore * self.answerSimValue

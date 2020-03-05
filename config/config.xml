@@ -73,7 +73,7 @@ getPriorities
   -->
 
   <multiagentParameters>
-    <defaultAgentsMode>multi</defaultAgentsMode>
+    <defaultAgentsMode>evaluation</defaultAgentsMode>
     <externalAgentsPath>agents/externalAgents/</externalAgentsPath>
     <decisionMethods>
         <decisionMethod name="SimpleMajority" weight="10"/>
@@ -99,6 +99,7 @@ getPriorities
         <agent name="LevenshteinAgent" active="1"/>
         <agent name="YesNoAgent" active="1"/>
         <agent name="OrAgent" active="1"/>
+        <agent name="AMAAgent" active="1"/>
         <!-- internal agents -->
         <agent name="talkpedia" active="0"/>
         <agent name="cheat" active="1"/>
@@ -118,7 +119,7 @@ getPriorities
     <questionTxtFile>resources/perguntas/testeSSS/perguntasBasicas_2.txt</questionTxtFile>
     <sequentialTargetTxtFile>trainedSSS_multi_basicas.txt</sequentialTargetTxtFile>
   </sequentialConversationParameters>
-  SimpleMajority
+  
 
 
   <prioritySettings>
@@ -137,7 +138,7 @@ getPriorities
   </learning>
 
   <evaluation>
-    <weightResults>{'CosineAgent1': 1.2749617284077642e-12, 'CosineAgent2': 5.361246638633292, 'CosineAgent3': 13.863454280432933, 'JaccardAgent1': 2.073290317033395, 'JaccardAgent2': 38.36621493616228, 'JaccardAgent3': 19.028592995201027, 'LevenshteinAgent1': 7.550843920248872e-33, 'LevenshteinAgent2': 1.2968538158600792e-18, 'LevenshteinAgent3': 21.30720083253579}</weightResults>
+    <weightResults>{'CosineAgent': 42.01502497353838, 'EdgarAgent': 0.00014519886548031838, 'GrootAgent': 2.386471500266396e-05, 'JaccardAgent': 15.969589359123805, 'YesNoAgent': 2.545444569402473e-05, 'LevenshteinAgent': 42.01502497353838, 'OrAgent': 2.0976907767562447e-05, 'AMAAgent': 0.00014519886548031838}</weightResults>
   </evaluation>
 
 

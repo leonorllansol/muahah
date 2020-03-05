@@ -14,6 +14,9 @@ class YesNoAgent:
 
         possibleAnswers = ["Sim.", "Não.", "Talvez."]
         
+        for c in candidates:
+            c.addScore(self.agentName, 0)
+        
         # TODO ter em conta o contexto
         # TODO ver se há respostas nos candidates que contenham Sim, Não, Talvez 
         finalAnswer = random.choice(possibleAnswers)

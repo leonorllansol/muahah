@@ -20,7 +20,6 @@ curr_dir = os.path.dirname(os.path.abspath(__file__))
 
 def dialogue(agents_dict, system_dict, corpora_dict):
     
-    '''João'''
     defaultAgentsMode = configsparser.getDefaultAgentsMode()
     
     if(not configsparser.usePreviouslyCreatedIndex()):
@@ -28,14 +27,99 @@ def dialogue(agents_dict, system_dict, corpora_dict):
 
     if(defaultAgentsMode == 'multi'):
         multiAgentAnswerMode(agents_dict, system_dict, corpora_dict)
-    #elif(defaultAgentsMode == 'sequential'):
-        #sequentialConversationMode()
-    #elif(defaultAgentsMode == 'learning'):
-        #learningMode()
-    #elif(defaultAgentsMode == 'evaluation'):
-        #evaluationMode()
-    #else:
-        #classicDialogueMode()
+    elif(defaultAgentsMode == 'sequential'):
+        sequentialConversationMode()
+    elif(defaultAgentsMode == 'learning'):
+        learningMode()
+    elif(defaultAgentsMode == 'evaluation'):
+        evaluationMode()
+    else:
+        classicDialogueMode()
+        
+def learningMode():
+    wm = WeightedMajority()
+    wm.learnWeights()
+
+def evaluationMode():
+    agentWeights = configsparser.getWeightResults()
+    if(agentWeights == {}):
+        print("Please set the weight dictionary in the configuration file according to the results obtained in the learning process (e.g: {'CosineAgent1': 24, 'CosineAgent2': 67, 'CosineAgent3': 9}).")
+        return
+    else:
+        wm = WeightedMajority()
+        wm.evaluation(agentWeights)
+        
+def classicDialogueMode():
+
+    """
+    Classic mode for SSS: only calls the Evaluators inside SSS's source, doesn't take external agents into account
+
+    - Initializes an AnswerSelection object (in this case, HighestWeightedScoreSelection)
+    - Performs the "legacy" SSS routine: upon receiving a user query, it sends that query to the AnswerSelection object
+    - The AnswerSelection object then returns an answer String, which is subsequently printed to the user
+    """
+
+    highestWeightedScoreSelection = HighestWeightedScoreSelection()
+
+
+    while True:
+        query = ""
+
+        while (query == ""):
+            query = input("Say something:\n")
+
+        if query == "exit":
+            break;
+
+        logging.basicConfig(filename='log.txt', filemode='w', format='%(message)s', level=logging.INFO)
+        logging.info("Query: " + query)
+
+
+        answer = highestWeightedScoreSelection.provideAnswer(query)
+
+
+        print("Question:", query)
+        print("Answer:", answer)
+        
+def sequentialConversationMode():
+
+    multipleAnswerSelection = MultipleAnswerSelection()
+    agentManager = AgentManager()
+    decisionMaker = DecisionMaker(configParser.getDecisionMethod())
+    
+    questionsPath = configParser.getSequentialQuestionTxtPath()
+    targetPath = configParser.getSequentialTargetTxtPath()
+
+    f = open(questionsPath,'r',encoding='utf8')
+    questions = f.readlines()
+    f.close()
+
+    edgar_results = open(targetPath,'w',encoding='utf8')
+
+    for query in questions:
+
+        #defaultAgentsAnswers = multipleAnswerSelection.provideAnswer(query)
+        defaultAgentsAnswers = {}
+        externalAgentsAnswers = agentManager.generateAgentsAnswers(query)
+        # Both defaultAgentsAnswers and externalAgentsAnswers are dictionaries in the format {'agent1': 'answer1', 'agent2': 'answer2'}
+        
+
+        # Calling the DecisionMaker after having all of the answers stored in the above dictionaries
+        answer = decisionMaker.decideBestAnswer(defaultAgentsAnswers,externalAgentsAnswers)
+
+
+        print("Question:", query)
+        print("Final Answer:", answer)
+        print()
+
+        edgar_results.write("Q - " + query)
+        edgar_results.write("A - " + answer + '\n\n')
+
+
+    edgar_results.close()
+
+
+
 
 def multiAgentAnswerMode(agents_dict, system_dict, corpora_dict):
     """

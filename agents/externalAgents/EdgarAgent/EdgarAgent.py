@@ -25,8 +25,11 @@ class EdgarAgent:
 
                 questionWords_WoStopwords = self.getStringListWithoutStopWords(questionWords)
 
-                #score = len(userInputWords.intersection(questionWords)) / len(userInputWords.union(questionWords))
-                score = len(userInputWords_WoStopwords.intersection(questionWords_WoStopwords)) / len(userInputWords_WoStopwords.union(questionWords_WoStopwords))
+                score = len(userInputWords.intersection(questionWords)) / len(userInputWords.union(questionWords))
+                #if len(userInputWords_WoStopwords.union(questionWords_WoStopwords)) != 0:
+                    #score = len(userInputWords_WoStopwords.intersection(questionWords_WoStopwords)) / len(userInputWords_WoStopwords.union(questionWords_WoStopwords))
+                #else:
+                    #score = len(userInputWords_WoStopwords.intersection(questionWords_WoStopwords)) / (len(userInputWords_WoStopwords.union(questionWords_WoStopwords)) + 1)
                 c.addScore(self.agentName,score)
                 #print(questionWords_WoStopwords, score)
 

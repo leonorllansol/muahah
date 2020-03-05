@@ -154,7 +154,7 @@ class WeightedMajority:
         for ref in self.references:
             
             nquery = Normalizer().applyNormalizations(ref.trigger, self.normalizers)    
-            candidates = self.DocumentManager.generateCandidates(nquery)
+            candidates = DocumentManager.generateCandidates(nquery)
             
             if(len(candidates) == 0):
                 continue

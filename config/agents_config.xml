@@ -73,7 +73,7 @@
 		<escapeSentences>
 			<escapeSentence>no results found for:</escapeSentence>
 		</escapeSentences>
-	</agent>
+	</agent>pi
 	<agent>
 		<classname>cheat_agent</classname>
 		<dialogMethod>cheating_dialog</dialogMethod>
