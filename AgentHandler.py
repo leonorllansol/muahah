@@ -65,6 +65,11 @@ class AgentHandler:
         t = time.time()
         
         candidates = DocumentManager.generateCandidates(query)
+        
+        for i,c in enumerate(candidates):
+            print(i,c.getQuestion())
+            print(i,c.getAnswer())
+        print()
 
         print(self.__class__.__name__ + " Candidate generation time: " + str(time.time() - t))
         
@@ -100,6 +105,9 @@ class AgentHandler:
                     answer = agent.requestAnswer(query,candidates)
                 else:
                     answer = configsparser.getNoAnswerMessage()
+                    
+            
+
 
             try:
                 if(answer == [] or answer == ""):

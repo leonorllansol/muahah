@@ -2,10 +2,10 @@
   <language>portuguese</language>
 
   <indexer>
-    <corpusPath>corpora/miniSubtlePT.txt</corpusPath>
+    <corpusPath>corpora/1million.txt</corpusPath>
     <normalizersPath>resources/normalizers/puncts.txt</normalizersPath>
     <stopwords>resources/stopwords/portuguese_stop.txt</stopwords>
-    <indexPath>resources/whooshIndexes/subtle</indexPath>
+    <indexPath>resources/whooshIndexes/1million</indexPath>
     <hitsPerQuery>20</hitsPerQuery>
     <usePreviouslyCreatedIndex>true</usePreviouslyCreatedIndex>
   </indexer>
@@ -73,7 +73,7 @@ getPriorities
   -->
 
   <multiagentParameters>
-    <defaultAgentsMode>evaluation</defaultAgentsMode>
+    <defaultAgentsMode>multi</defaultAgentsMode>
     <externalAgentsPath>agents/externalAgents/</externalAgentsPath>
     <decisionMethods>
         <decisionMethod name="SimpleMajority" weight="10"/>
