@@ -108,4 +108,17 @@ That said, the following indications must be followed when creating a new agent:
   - agents_config.xml: this file contains the labels associated to each agent.
   - corpora_config.xml: this file contains information about the corpora used in this project.
 
- 
+ ## Deploy on Slack
+ - Slack deployment requires the following:
+ - `pip install pyngrok`
+ - `pip install slackclient>=2.0.0`
+ - `pip install slackeventsapi>=2.1.0`
+ - `pip install Flask>=1.1.1`
+ - `pip install certifi`
+ - 1. Open two terminal windows.
+ - 2. Run `ngrok http 8080` on one of them.
+ - 3. Run `python3 app.py` on the other.
+ - 4. Copy the URL in the 'Following' field of the ngrok command output and paste it into the 'Request URL' field in Slack's app Event Subscriptions (https://api.slack.com/apps/AUSP1BJHX/event-subscriptions?), followed by `/slack/events`.
+ 	- example: `http://97c1ad27.ngrok.io/slack/events`
+ - The bot app will then be available in the workspace `aia-gko8993.slack.com`. 
+
