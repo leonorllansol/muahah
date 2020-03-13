@@ -19,11 +19,11 @@ curr_dir = os.path.dirname(os.path.abspath(__file__))
 
 
 def dialogue(agents_dict, system_dict, corpora_dict):
-    
+
     defaultAgentsMode = configsparser.getDefaultAgentsMode()
-    
+
     if(not configsparser.usePreviouslyCreatedIndex()):
-        DocumentManager.createIndex(configsparser.getIndexPath(), configsparser.getCorpusPath()) 
+        DocumentManager.createIndex(configsparser.getIndexPath(), configsparser.getCorpusPath())
 
     if(defaultAgentsMode == 'multi'):
         multiAgentAnswerMode(agents_dict, system_dict, corpora_dict)
@@ -35,7 +35,7 @@ def dialogue(agents_dict, system_dict, corpora_dict):
         evaluationMode()
     else:
         classicDialogueMode()
-        
+
 def learningMode():
     wm = WeightedMajority()
     wm.learnWeights()
@@ -48,7 +48,7 @@ def evaluationMode():
     else:
         wm = WeightedMajority()
         wm.evaluation(agentWeights)
-        
+
 def classicDialogueMode():
 
     """
@@ -80,13 +80,13 @@ def classicDialogueMode():
 
         print("Question:", query)
         print("Answer:", answer)
-        
+
 def sequentialConversationMode():
 
     multipleAnswerSelection = MultipleAnswerSelection()
     agentManager = AgentManager()
     decisionMaker = DecisionMaker(configParser.getDecisionMethod())
-    
+
     questionsPath = configParser.getSequentialQuestionTxtPath()
     targetPath = configParser.getSequentialTargetTxtPath()
 
@@ -102,7 +102,7 @@ def sequentialConversationMode():
         defaultAgentsAnswers = {}
         externalAgentsAnswers = agentManager.generateAgentsAnswers(query)
         # Both defaultAgentsAnswers and externalAgentsAnswers are dictionaries in the format {'agent1': 'answer1', 'agent2': 'answer2'}
-        
+
 
         # Calling the DecisionMaker after having all of the answers stored in the above dictionaries
         answer = decisionMaker.decideBestAnswer(defaultAgentsAnswers,externalAgentsAnswers)
@@ -131,9 +131,9 @@ def multiAgentAnswerMode(agents_dict, system_dict, corpora_dict):
     """
     agentManager = AgentHandler()
     decisionMethodsWeights = configsparser.getDecisionMethodsWeights()
-    
+
     decisionMaker = Decisor(decisionMethodsWeights, system_dict, agents_dict, corpora_dict)
-    
+
 
     while True:
         query = ""
@@ -144,11 +144,11 @@ def multiAgentAnswerMode(agents_dict, system_dict, corpora_dict):
 
         if query == "exit":
             break
-        
+
         logging.basicConfig(filename='logs/log.txt', filemode='w', format='%(message)s', level=logging.INFO)
 
         getAnswer(query, False)
-        
+
 
 
 def get_agent_answer(agent: str, method: str, path: str, import_path: str, query: str, labels: list, answer_list: dict)\
@@ -201,29 +201,29 @@ def getAnswer(query:str, firstCall: bool):
     agents_dict = configsparser.getAgentsProperties(curr_dir + '/config/agents_config.xml')
     corpora_dict = configsparser.getCorporaProperties(curr_dir + '/config/corpora_config.xml')
     system_dict = configsparser.getSystemProperties(curr_dir + '/config/config.xml')
-    
+
     if firstCall:
-        train(corpora_dict) 
+        train(corpora_dict)
         agentManager = AgentHandler()
         decisionMethodsWeights = configsparser.getDecisionMethodsWeights()
-    
+
         decisionMaker = Decisor(decisionMethodsWeights, system_dict, agents_dict, corpora_dict)
-        
+
     externalAgentsAnswers = agentManager.generateExternalAgentsAnswers(query)
-        
+
     # Mariana's agents
     internalAgentsAnswers = agentManager.generateInternalAgentsAnswers(get_agent_answer, agents_dict, query)
-    
+
     predictions_query = classification.predict(corpora_dict['query'], query, 'query')
-    
+
     AMA_labels = open("AMAlabels.txt").readlines()
 
-    
+
     previousWeight = -1
     currStrategy = ""
     previousDict = copy.deepcopy(decisionMethodsWeights)
     # increase weights of decision making strategies according to query labels
-    
+
     #def increaseWeightsIfLabel(label, list_of_labels, strategy, increase):
         #if label in list_of_labels:
             #if decisionMethodsWeights[strategy] > 0:
@@ -234,18 +234,25 @@ def getAnswer(query:str, firstCall: bool):
         #increaseWeightsIfLabel(label, AMA_labels, "AMAStrategy", 60)
     #increaseWeightsIfLabel("OR_QUESTION", predictions_query, "ORStrategy", 60)
     #increaseWeightsIfLabel("YN_QUESTION", predictions_query, "YNStrategy", 60)
-    
-    if "OR_QUESTION" in predictions_query:
+
+    for label in AMA_labels:
+        label = label.strip('\n')
+        if label in predictions_query:
+            if decisionMethodsWeights["AMAStrategy"] > 0:
+                previousWeight = decisionMethodsWeights["AMAStrategy"]
+                decisionMethodsWeights["AMAStrategy"] += 60
+                currStrategy = "AMAStrategy"
+    if currStrategy=="" and "OR_QUESTION" in predictions_query:
         if decisionMethodsWeights["OrStrategy"] > 0:
             previousWeight = decisionMethodsWeights["OrStrategy"]
             decisionMethodsWeights["OrStrategy"] += 60
             currStrategy = "OrStrategy"
-    elif "YN_QUESTION" in predictions_query:
+    elif currStrategy=="" and "YN_QUESTION" in predictions_query:
         if decisionMethodsWeights["YesNoStrategy"] > 0:
             previousWeight = decisionMethodsWeights["YesNoStrategy"]
             decisionMethodsWeights["YesNoStrategy"] += 60
             currStrategy = "YesNoStrategy"
-    
+
     # update weights of other strategies so that sum of dictionary is still 100
     if previousWeight != -1:
         # assuming that all weights sum to 100
@@ -254,14 +261,14 @@ def getAnswer(query:str, firstCall: bool):
             if strategy != currStrategy:
                 decisionMethodsWeights[strategy] /= (100 - previousWeight) / remainingWeights
     #print(decisionMethodsWeights)
-    
+
     for agent,answer in internalAgentsAnswers.items():
         if isinstance(internalAgentsAnswers[agent], list) or len(internalAgentsAnswers[agent]) == 0:
             # delete empty answers
             del internalAgentsAnswers[agent]
-        
+
     answer_by_strategy, answer_tags = decisionMaker.bestAnswerByStrategy(query, internalAgentsAnswers, externalAgentsAnswers, predictions_query)
-    
+
     # score per answer based on config weights per strategy {'answer':weight}
     score_per_answer = {}
     for strategy in answer_by_strategy:
@@ -272,10 +279,10 @@ def getAnswer(query:str, firstCall: bool):
                 score_per_answer[answer_by_strategy[strategy]] += decisionMethodsWeights[strategy]
             else:
                 score_per_answer[answer_by_strategy[strategy]] = decisionMethodsWeights[strategy]
-    
+
     #print(score_per_answer)
     answer_max_weight = max(score_per_answer.items(), key=operator.itemgetter(1))[0]
-    
+
     logging.info("Query: " + query)
     logging.info("Answer: " + answer_max_weight)
 
@@ -287,7 +294,7 @@ def getAnswer(query:str, firstCall: bool):
 
     # repôr pesos
     decisionMethodsWeights = copy.deepcopy(previousDict)
-    
+
     return answer_max_weight
 
 if __name__ == "__main__":
@@ -297,5 +304,5 @@ if __name__ == "__main__":
     system_dicti = configsparser.getSystemProperties(curr_dir + '/config/config.xml')
 
     train(corpora_dicti)
-    
+
     dialogue(agents_dicti, system_dicti, corpora_dicti)

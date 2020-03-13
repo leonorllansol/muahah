@@ -10,7 +10,7 @@ from sklearn.tree import DecisionTreeClassifier, ExtraTreeClassifier
 from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier, BaggingClassifier, ExtraTreesClassifier, GradientBoostingClassifier, VotingClassifier
 from sklearn.naive_bayes import GaussianNB, BernoulliNB, MultinomialNB, ComplementNB
 from nltk import TweetTokenizer
-
+from plug_and_play import file_parsing
 # parse an xml file by name
 mydoc = minidom.parse('config/config.xml')
 curr_dir = os.path.dirname(os.path.abspath(__file__))
@@ -164,9 +164,9 @@ def getWeightResults():
             toDelete.append(agent)
     for item in toDelete:
         del weights[item]
-            
+
     return weights
-    
+
 def getInitialWeights():
     initialWeights = mydoc.getElementsByTagName('initialWeights')[0]
     return eval(initialWeights.firstChild.data)
@@ -249,7 +249,7 @@ def getAgentsProperties(path: str) -> dict:
         agents_dict[folder_name] = {'path': regex.sub("", agents_path), 'importPath': regex.sub("", agents_import),
                                     'methodName': regex.sub("", method_name), 'labels': labels,
                                     'escapeSentences': escape_sentences}
-        
+
     agents_elements = doc.getElementsByTagName('externalAgent')
     for agent in agents_elements:
         labels = {}
@@ -264,7 +264,7 @@ def getAgentsProperties(path: str) -> dict:
                                 'The degree attribute must be equal to a string that only contains numbers.')
 
         agents_dict[agent.attributes['name'].value] = {'labels': labels}
-        
+
     return agents_dict
 
 

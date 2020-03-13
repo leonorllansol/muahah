@@ -63,17 +63,17 @@ class AgentHandler:
         agentAnswers = {}
 
         t = time.time()
-        
+
         candidates = DocumentManager.generateCandidates(query)
-        
-        for i,c in enumerate(candidates):
-            print(i,c.getQuestion())
-            print(i,c.getAnswer())
-        print()
+
+        # for i,c in enumerate(candidates):
+        #     print(i,c.getQuestion())
+        #     print(i,c.getAnswer())
+        # print()
 
         print(self.__class__.__name__ + " Candidate generation time: " + str(time.time() - t))
-        
-        
+
+
         for agent in self.externalAgents:
             flag = False
             for elem in configsparser.getActiveAgents():
@@ -95,18 +95,18 @@ class AgentHandler:
             try:
                 if agent.corpusPath:
                     candidates = DocumentManager.generateCandidates(query,indexPath=agent.indexPath,corpusPath=agent.corpusPath)
-                    
-                    answer = agent.requestAnswer(query,candidates)        
+
+                    answer = agent.requestAnswer(query,candidates)
 
                     candidates = DocumentManager.generateCandidates(query)
-                    
+
             except AttributeError:
                 if(len(candidates) > 0):
                     answer = agent.requestAnswer(query,candidates)
                 else:
                     answer = configsparser.getNoAnswerMessage()
-                    
-            
+
+
 
 
             try:
@@ -118,7 +118,7 @@ class AgentHandler:
                 agentAnswers[agent.agentName] = configsparser.getNoAnswerMessage()
 
             #print(agent.agentName + " execution time: " + str(time.time() - agentTime))
-            
+
         for agent, answer in agentAnswers.items():
             if type(answer) is list:
                 if not (type(answer[0]) is str):
@@ -129,7 +129,7 @@ class AgentHandler:
                 agentAnswers[agent] = answer
 
         return agentAnswers
-    
+
     def generateInternalAgentsAnswers(self, function, agents_dict: dict, query: str) -> dict:
 
         """
@@ -191,7 +191,7 @@ class AgentHandler:
     def generateAgentsAnswersFixedCandidates(self, query, candidates):
 
         #print('++++++++++++++++++')
-        #for c in candidates:            
+        #for c in candidates:
         #    print(c.getAnswer())
         #print('++++++++++++++++++')
 
@@ -209,7 +209,7 @@ class AgentHandler:
                     query = Normalizer().applyNormalizations(query, self.normalizers)
             except AttributeError:
                 pass
-            
+
             answer = agent.requestAnswer(query,candidates)
             #print(answer)
             #print(agent.agentName)
@@ -234,15 +234,6 @@ class AgentHandler:
 
         for ad in additionalAnswers:
             candidates.append(ad)
-            
+
             #print(agent.agentName + " execution time: " + str(time.time() - agentTime))
         return agentAnswers
-
-
-
-
-
-
-
-
-

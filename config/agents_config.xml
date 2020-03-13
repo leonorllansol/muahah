@@ -1,4 +1,16 @@
 <agents>
+	<externalAgent name="AMAAgent">
+	<labels>
+		<label score='1.0'>Empresa_na_Hora_</label>
+		<label score='1.0'>Marca_na_hora_e_marca_na_hora_online</label>
+		<label score='1.0'>Formas_jurídicas</label>
+		<label score='1.0'>Cartão_de_Empresa/Cartão_de_Pessoa_Coletiva_</label>
+		<label score='1.0'>Criação_da_Empresa_Online_</label>
+		<label score='1.0'>Certificados_de_Admissibilidade</label>
+		<label score='1.0'>Inscrições_Online</label>
+		<label score='1.0'>Gestão_da_Empresa_Online_</label>
+	</labels>
+</externalAgent>
     <externalAgent name="YesNoAgent">
 		<labels>
 			<label score='1.0'>QUESTION</label>
