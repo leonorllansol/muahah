@@ -83,6 +83,11 @@
 			<path>/corpora/query/AMA_corpus_query.txt</path>
 			<corpusType>specific</corpusType>
 		</corpus>
+		<corpus>
+			<name>covid_query</name>
+			<path>/corpora/query/covid_query.csv</path>
+			<corpusType>specific</corpusType>
+		</corpus>
 	</query>
 	<answer>
 		<corpus>
@@ -103,6 +108,11 @@
 		<corpus>
 			<name>edgar</name>
 			<path>/corpora/answer/edgar_corpus_so_respostas.txt</path>
+			<corpusType>specific</corpusType>
+		</corpus>
+		<corpus>
+			<name>covid_answer</name>
+			<path>/corpora/answer/covid_answer.csv</path>
 			<corpusType>specific</corpusType>
 		</corpus>
 	</answer>

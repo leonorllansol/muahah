@@ -1,36 +1,36 @@
 lang=en
-tagdir=/afs/l2f.inesc-id.pt/home/lml/Documents/integratedMASystem/resources/TREETAGGER
-tagbin=/afs/l2f.inesc-id.pt/home/lml/Documents/integratedMASystem/resources/TREETAGGER/bin/tree-tagger
-tagparfile=/afs/l2f.inesc-id.pt/home/lml/Documents/integratedMASystem/resources/TREETAGGER/lib/portuguese.par
+tagdir=/home/nono/Documents/TESE/chatuga-sss/resources/TREETAGGER
+tagbin=/home/nono/Documents/TESE/chatuga-sss/resources/TREETAGGER/bin/tree-tagger
+tagparfile=/home/nono/Documents/TESE/chatuga-sss/resources/TREETAGGER/lib/portuguese.par
 tagopt=-token -lemma -sgml -quiet -no-unknown
 taginencoding=utf-8
 tagoutencoding=utf-8
 taginencerr=replace
 tagoutencerr=replace
-abbrevfile=/afs/l2f.inesc-id.pt/home/lml/Documents/integratedMASystem/resources/TREETAGGER/lib/english-abbreviations
-Read 289 abbreviations from file: /afs/l2f.inesc-id.pt/home/lml/Documents/integratedMASystem/resources/TREETAGGER/lib/english-abbreviations
-Started TreeTagger from command: ['/afs/l2f.inesc-id.pt/home/lml/Documents/integratedMASystem/resources/TREETAGGER/bin/tree-tagger', '-token', '-lemma', '-sgml', '-quiet', '-no-unknown', '/afs/l2f.inesc-id.pt/home/lml/Documents/integratedMASystem/resources/TREETAGGER/lib/portuguese.par']
+abbrevfile=/home/nono/Documents/TESE/chatuga-sss/resources/TREETAGGER/lib/english-abbreviations
+Read 289 abbreviations from file: /home/nono/Documents/TESE/chatuga-sss/resources/TREETAGGER/lib/english-abbreviations
+Started TreeTagger from command: ['/home/nono/Documents/TESE/chatuga-sss/resources/TREETAGGER/bin/tree-tagger', '-token', '-lemma', '-sgml', '-quiet', '-no-unknown', '/home/nono/Documents/TESE/chatuga-sss/resources/TREETAGGER/lib/portuguese.par']
 Writing starting part to pipe.
 Writing data to pipe.
 Writing ending and flushing part to pipe.
 Finished writing data to pipe. Pipe flushed.
-Query: como te chamas?
-Answer: Chamo-me Edgar Smith.
+Query: há vacina?
+Answer: Não existe vacina. Sendo um vírus recentemente identificado, estão em curso as investigações para o seu desenvolvimento.
 lang=en
-tagdir=/afs/l2f.inesc-id.pt/home/lml/Documents/integratedMASystem/resources/TREETAGGER
-tagbin=/afs/l2f.inesc-id.pt/home/lml/Documents/integratedMASystem/resources/TREETAGGER/bin/tree-tagger
-tagparfile=/afs/l2f.inesc-id.pt/home/lml/Documents/integratedMASystem/resources/TREETAGGER/lib/portuguese.par
+tagdir=/home/nono/Documents/TESE/chatuga-sss/resources/TREETAGGER
+tagbin=/home/nono/Documents/TESE/chatuga-sss/resources/TREETAGGER/bin/tree-tagger
+tagparfile=/home/nono/Documents/TESE/chatuga-sss/resources/TREETAGGER/lib/portuguese.par
 tagopt=-token -lemma -sgml -quiet -no-unknown
 taginencoding=utf-8
 tagoutencoding=utf-8
 taginencerr=replace
 tagoutencerr=replace
-abbrevfile=/afs/l2f.inesc-id.pt/home/lml/Documents/integratedMASystem/resources/TREETAGGER/lib/english-abbreviations
-Read 289 abbreviations from file: /afs/l2f.inesc-id.pt/home/lml/Documents/integratedMASystem/resources/TREETAGGER/lib/english-abbreviations
-Started TreeTagger from command: ['/afs/l2f.inesc-id.pt/home/lml/Documents/integratedMASystem/resources/TREETAGGER/bin/tree-tagger', '-token', '-lemma', '-sgml', '-quiet', '-no-unknown', '/afs/l2f.inesc-id.pt/home/lml/Documents/integratedMASystem/resources/TREETAGGER/lib/portuguese.par']
+abbrevfile=/home/nono/Documents/TESE/chatuga-sss/resources/TREETAGGER/lib/english-abbreviations
+Read 289 abbreviations from file: /home/nono/Documents/TESE/chatuga-sss/resources/TREETAGGER/lib/english-abbreviations
+Started TreeTagger from command: ['/home/nono/Documents/TESE/chatuga-sss/resources/TREETAGGER/bin/tree-tagger', '-token', '-lemma', '-sgml', '-quiet', '-no-unknown', '/home/nono/Documents/TESE/chatuga-sss/resources/TREETAGGER/lib/portuguese.par']
 Writing starting part to pipe.
 Writing data to pipe.
 Writing ending and flushing part to pipe.
 Finished writing data to pipe. Pipe flushed.
-Query: gostas de broa?
-Answer: Sim, já gostava de homens antes, não há razão para parar agora.
+Query: há alguma vacina?
+Answer: Não existe vacina. Sendo um vírus recentemente identificado, estão em curso as investigações para o seu desenvolvimento.

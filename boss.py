@@ -129,7 +129,15 @@ def multiAgentAnswerMode(agents_dict, system_dict, corpora_dict):
     :param system_dict: A dictionary containing all of the system information contained in the system config xml file
     :return: Not applicable.
     """
-    agentManager = AgentHandler()
+    AMA_labels = open("AMAlabels.txt").readlines()
+    for i in range(len(AMA_labels)):
+        AMA_labels[i] = AMA_labels[i].strip('\n')
+
+    covid_labels = open("corpora/covidLabels.txt").readlines()
+    for i in range(len(covid_labels)):
+        covid_labels[i] = covid_labels[i].strip('\n')
+
+    agentManager = AgentHandler(AMA_labels, covid_labels)
     decisionMethodsWeights = configsparser.getDecisionMethodsWeights()
 
     decisionMaker = Decisor(decisionMethodsWeights, system_dict, agents_dict, corpora_dict)
@@ -202,21 +210,31 @@ def getAnswer(query:str, firstCall: bool):
     corpora_dict = configsparser.getCorporaProperties(curr_dir + '/config/corpora_config.xml')
     system_dict = configsparser.getSystemProperties(curr_dir + '/config/config.xml')
 
+    AMA_labels = open("AMAlabels.txt").readlines()
+    for i in range(len(AMA_labels)):
+        AMA_labels[i] = AMA_labels[i].strip('\n')
+
     if firstCall:
         train(corpora_dict)
-        agentManager = AgentHandler()
+        covid_labels = open("corpora/covidLabels.txt").readlines()
+        for i in range(len(covid_labels)):
+            covid_labels[i] = covid_labels[i].strip('\n')
+
+        agentManager = AgentHandler(AMA_labels, covid_labels)
         decisionMethodsWeights = configsparser.getDecisionMethodsWeights()
 
         decisionMaker = Decisor(decisionMethodsWeights, system_dict, agents_dict, corpora_dict)
 
-    externalAgentsAnswers = agentManager.generateExternalAgentsAnswers(query)
+    predictions_query = classification.predict(corpora_dict['query'], query, 'query')
+
+
+    externalAgentsAnswers, source, candidateQuery = agentManager.generateExternalAgentsAnswers(query, predictions_query)
 
     # Mariana's agents
     internalAgentsAnswers = agentManager.generateInternalAgentsAnswers(get_agent_answer, agents_dict, query)
 
-    predictions_query = classification.predict(corpora_dict['query'], query, 'query')
 
-    AMA_labels = open("AMAlabels.txt").readlines()
+
 
 
     previousWeight = -1
@@ -236,7 +254,6 @@ def getAnswer(query:str, firstCall: bool):
     #increaseWeightsIfLabel("YN_QUESTION", predictions_query, "YNStrategy", 60)
 
     for label in AMA_labels:
-        label = label.strip('\n')
         if label in predictions_query:
             if decisionMethodsWeights["AMAStrategy"] > 0:
                 previousWeight = decisionMethodsWeights["AMAStrategy"]
@@ -280,12 +297,28 @@ def getAnswer(query:str, firstCall: bool):
             else:
                 score_per_answer[answer_by_strategy[strategy]] = decisionMethodsWeights[strategy]
 
-    #print(score_per_answer)
-    answer_max_weight = max(score_per_answer.items(), key=operator.itemgetter(1))[0]
+    # if no answer different that the noAnswerMessage was found
+    if len(score_per_answer) == 0:
+        answer_max_weight = configsparser.getNoAnswerMessage()
+    else:
+        answer_max_weight = max(score_per_answer.items(), key=operator.itemgetter(1))[0]
 
     logging.info("Query: " + query)
     logging.info("Answer: " + answer_max_weight)
 
+    agent_max_weight = ""
+    for agent in externalAgentsAnswers:
+        if externalAgentsAnswers[agent] == answer_max_weight:
+            agent_max_weight = agent
+            break
+    if agent_max_weight == 'AntiCovidAgent' and answer_max_weight != configsparser.getNoAnswerMessage():
+        answer = ""
+        answer += "Percebi que a sua pergunta é: \"" + candidateQuery + "\".\n"
+        answer += answer_max_weight
+        if isinstance(source, float):
+            source = "Desconhecida"
+        answer += " Fonte: " + source
+        answer_max_weight = answer
 
     print()
     print("Questão: ", query)
@@ -302,7 +335,5 @@ if __name__ == "__main__":
     agents_dicti = configsparser.getAgentsProperties(curr_dir + '/config/agents_config.xml')
     corpora_dicti = configsparser.getCorporaProperties(curr_dir + '/config/corpora_config.xml')
     system_dicti = configsparser.getSystemProperties(curr_dir + '/config/config.xml')
-
     train(corpora_dicti)
-
     dialogue(agents_dicti, system_dicti, corpora_dicti)

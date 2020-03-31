@@ -37,7 +37,9 @@ class AgentHandler:
     - Initialize the avaiable external agents
     - Check the normalizers to use
     """
-    def __init__(self):
+    def __init__(self, AMA_labels, covid_labels):
+        self.AMA_labels = AMA_labels
+        self.covid_labels = covid_labels
         self.conversation = conversation.Conversation()
         self.externalAgentsPath = configsparser.getExternalAgentsPath()
         self.externalAgents = self.initializeAgents()
@@ -59,12 +61,12 @@ class AgentHandler:
     :param query: The query introduced by the user.
     :return: A dictionary containing all of the answers given to the query by the external agents. {'agent':'answer'}
     """
-    def generateExternalAgentsAnswers(self, query):
+    def generateExternalAgentsAnswers(self, query, query_labels):
         agentAnswers = {}
 
         t = time.time()
 
-        candidates = DocumentManager.generateCandidates(query)
+        #candidates = DocumentManager.generateCandidates(query)
 
         # for i,c in enumerate(candidates):
         #     print(i,c.getQuestion())
@@ -73,7 +75,8 @@ class AgentHandler:
 
         print(self.__class__.__name__ + " Candidate generation time: " + str(time.time() - t))
 
-
+        source = ""
+        candidateQuery = ""
         for agent in self.externalAgents:
             flag = False
             for elem in configsparser.getActiveAgents():
@@ -96,12 +99,18 @@ class AgentHandler:
                 if agent.corpusPath:
                     candidates = DocumentManager.generateCandidates(query,indexPath=agent.indexPath,corpusPath=agent.corpusPath)
 
-                    answer = agent.requestAnswer(query,candidates)
+                    if agent.corpusPath == "corpora/ama.txt":
+                        answer = agent.requestAnswer(query,candidates, query_labels, self.AMA_labels)
+                    if agent.corpusPath == "corpora/covid.txt":
+                        answer, source, candidateQuery = agent.requestAnswer(query,candidates, query_labels, self.covid_labels)
+                    else:
+                        answer = agent.requestAnswer(query,candidates)
 
-                    candidates = DocumentManager.generateCandidates(query)
+                    #candidates = DocumentManager.generateCandidates(query)
 
             except AttributeError:
                 if(len(candidates) > 0):
+                    print(agent)
                     answer = agent.requestAnswer(query,candidates)
                 else:
                     answer = configsparser.getNoAnswerMessage()
@@ -128,7 +137,7 @@ class AgentHandler:
             else:
                 agentAnswers[agent] = answer
 
-        return agentAnswers
+        return agentAnswers, source, candidateQuery
 
     def generateInternalAgentsAnswers(self, function, agents_dict: dict, query: str) -> dict:
 

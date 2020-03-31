@@ -93,17 +93,18 @@ getPriorities
 
     <agents>
         <!-- external agents -->
-        <agent name="CosineAgent" active="1"/>
-        <agent name="EdgarAgent" active="1"/>
-        <agent name="GrootAgent" active="1"/>
-        <agent name="JaccardAgent" active="1"/>
-        <agent name="LevenshteinAgent" active="1"/>
-        <agent name="YesNoAgent" active="1"/>
-        <agent name="OrAgent" active="1"/>
-        <agent name="AMAAgent" active="1"/>
+        <agent name="CosineAgent" active="0"/>
+        <agent name="EdgarAgent" active="0"/>
+        <agent name="GrootAgent" active="0"/>
+        <agent name="JaccardAgent" active="0"/>
+        <agent name="LevenshteinAgent" active="0"/>
+        <agent name="YesNoAgent" active="0"/>
+        <agent name="OrAgent" active="0"/>
+        <agent name="AMAAgent" active="0"/>
+        <agent name="AntiCovidAgent" active="1"/>
         <!-- internal agents -->
         <agent name="talkpedia" active="0"/>
-        <agent name="cheat" active="1"/>
+        <agent name="cheat" active="0"/>
     </agents>
   </multiagentParameters>
 

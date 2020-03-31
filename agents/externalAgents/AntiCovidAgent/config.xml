@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <mainClass>AntiCovidAgent</mainClass>
+    <corpusPath>corpora/covid.txt</corpusPath>
+    <indexPath>resources/whooshIndexes/covid</indexPath>
+    <threshold>0.35</threshold>
+    <stopwords>resources/stopwords/edgar_stop.txt</stopwords>
+</config>

@@ -12,15 +12,13 @@ import configsparser
 
 def createIndex(indexPath,corpusPath):
     schema = Schema(question=TEXT(stored=True), answer=TEXT(stored=True), normalizedquestion=TEXT(stored=True), normalizedanswer=TEXT(stored=True), diff=NUMERIC(stored=True))
-    
+
     if not os.path.exists(indexPath):
         os.mkdir(indexPath)
 
     index = create_in(indexPath, schema)
     indexWriter = index.writer()
-
     corpusQAs = subtitleCorpusReader(corpusPath)
-
     for qa in corpusQAs:
         indexWriter.add_document(question=qa.question, answer=qa.answer, normalizedquestion=qa.normalizedQuestion, normalizedanswer=qa.normalizedAnswer, diff=qa.diff)
 
@@ -47,7 +45,7 @@ def generateCandidates(inputQuestion, indexPath=configsparser.getIndexPath(), co
     index = openIndex(indexPath, corpusPath)
 
     searcher = index.searcher()
-
+    docs = searcher.documents()
     parser = QueryParser("normalizedquestion",index.schema,group=OrGroup)
     q = parser.parse(inputQuestion)
     hits = searcher.search(q,limit=hitsPerQuery)
@@ -70,18 +68,23 @@ def subtitleCorpusReader(corpusPath):
             continue
         subID = lines[line].split(' - ')[1]
         line += 1
-        
+
         dialogID = lines[line].split(' - ')[1]
         line += 1
 
         diff = int(lines[line].split(' - ')[1])
         line += 1
-        
+
         question = lines[line].split(' - ')[1]
         line += 1
 
         answer = lines[line].split(' - ')[1]
         line += 1
+        while(line < len(lines) - 1 and lines[line+1].split(' - ')[0] != "SubId"):
+            answer += '\n'
+            answer += lines[line]
+            line += 1
+
 
         normalizedQuestion = cleanSentence(question)
         normalizedAnswer = cleanSentence(answer)
@@ -95,7 +98,7 @@ def candidatesToQA(candidates):
     qaList = []
     for c in candidates:
         qaList.append(SimpleQA(-1,c["question"], c["normalizedquestion"], c["answer"], c["normalizedanswer"], c["diff"]))
-    
+
     return qaList
 
 
@@ -112,12 +115,3 @@ def cleanSentence(sentence):
 
 def getSubstringAfterHyphen(temp):
     return temp[temp.index('-') + 2:]
-
-
-
-
-
-
-
-
-

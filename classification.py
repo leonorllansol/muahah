@@ -68,7 +68,6 @@ def train(corpora_dict: dict, query_or_answer: str,
     :param query_or_answer: A string that indicates if the corpus is of answers or queries.
     :return: It does not return anything but it creates files with the trained models in the folder models.
     """
-
     def new_pandas_generator(query_column, label_column):
         new_pd = pd.DataFrame()
         new_pd[query_or_answer] = query_column
@@ -77,11 +76,11 @@ def train(corpora_dict: dict, query_or_answer: str,
     for corpus in corpora_dict[query_or_answer]:
         corpus_pandas = pd.read_csv(corpora_dict[query_or_answer][corpus]['path'], encoding='utf-8', sep='*')
         # Leonor - if + break
-        if 'query' in corpus_pandas:
-            model_training(corpus_pandas[query_or_answer], corpus_pandas[list(corpus_pandas)[0]], corpora_dict[query_or_answer][corpus]['classifier']
+        #if 'query' in corpus_pandas:
+        model_training(corpus_pandas[query_or_answer], corpus_pandas[list(corpus_pandas)[0]], corpora_dict[query_or_answer][corpus]['classifier']
                         , corpora_dict[query_or_answer][corpus]['vectorizer'], corpus, query_or_answer)
-        else:
-            break;
+        #else:
+            #break;
 
         if 'subcorpus' in corpora_dict[query_or_answer][corpus]:
             # Recursively train subcorpus of the current corpus.
@@ -113,7 +112,7 @@ def train(corpora_dict: dict, query_or_answer: str,
             generic_pandas = pd.read_csv(curr_dir + generic_corpus_path, encoding='utf-8', sep='*')
             if len(corpus_pandas.index) > len(generic_pandas):
                 required_size = len(generic_pandas.index)
-                
+
             new_corpus_pandas = new_pandas_generator(corpus_pandas[query_or_answer].sample(n=required_size), np.array([corpus]*required_size))
             new_generic_pandas = new_pandas_generator(generic_pandas['query'].sample(n=required_size), np.array(['generic'] * required_size))
             new_pandas = pd.concat([new_corpus_pandas, new_generic_pandas])
@@ -210,7 +209,3 @@ def rules(query: str, previous_prediction: str) -> None or str:
 
     elif 'ou' in query:
         return 'OR_QUESTION'
-
-
-
-
