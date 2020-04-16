@@ -2,7 +2,8 @@ from xml.dom import minidom
 from xml.dom.minidom import Node
 import os
 import re
-import importlib 
+import importlib
+import configsparser
 
 """
 The AgentFactory module is a library used by the AgentManager class in order to discover and instantiate all available external agents.
@@ -29,26 +30,32 @@ Return an externalAgents array containing each agent's instance
 """
 
 def createExternalAgents(externalAgentsPath):
-    externalAgents = [] 
+    externalAgents = []
 
     configFiles = getConfigFiles(externalAgentsPath)
     disabledAgents = getDisabledAgents()
-    
+
     for config in configFiles:
-        
+
 
         configs = {}
         configDoc = minidom.parse(config)
-        
+
         for elem in configDoc.getElementsByTagName('config'):
             for x in elem.childNodes:
                 if(x.nodeType == Node.ELEMENT_NODE):
-                    configs[x.tagName] = x.firstChild.data
-        
+                    if (x.hasAttribute('name')):
+                        if not x.tagName in configs:
+                            configs[x.tagName] = {}
+                        configs[x.tagName][x.getAttribute('name')] = x.firstChild.data
+                    else:
+                        configs[x.tagName] = x.firstChild.data
+
+
         if(len(configs) > 0):
-        
+
             mainClass = configs['mainClass']
-            if(mainClass not in disabledAgents):
+            if(mainClass not in disabledAgents and mainClass in configsparser.getActiveAgents()):
                 try:
                     agentAmount = int(configs['agentAmount'])
                 except KeyError:
@@ -70,13 +77,16 @@ def createExternalAgents(externalAgentsPath):
                         paramValues = agentConfigs[param]
                         agentConfigs[param] = paramValues.split(',')[a]
 
-                    agent = class_(agentConfigs)
+                    if mainClass == 'GeneralAgent':
+                        agent = class_(agentConfigs, a)
+                    else:
+                        agent = class_(agentConfigs)
 
-                    if(agentAmount > 1):
+                    if(agentAmount > 1 and mainClass != 'GeneralAgent'):
                         agent.agentName += str(a+1)
-                    
+
                     externalAgents.append(agent)
-    
+
     return externalAgents
 
 
@@ -104,7 +114,7 @@ def getConfigFiles(dirName):
     directories = os.listdir(curr_dir + "/" + dirName)
     configFiles = []
     for d in directories:
-        
+
         fullpath = os.path.join(dirName, d)
         if os.path.isdir(fullpath):
             configFiles = configFiles + getConfigFiles(fullpath)

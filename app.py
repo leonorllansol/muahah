@@ -18,7 +18,8 @@ firstCall = False
 
 # Initialize a Flask app to host the events adapter
 app = Flask(__name__)
-token = 'xoxb-600605134164-977423189251-T1jDl044w2Ww94pKptF7tFYW'
+
+token = 'xoxb-600605134164-977423189251-oy3LKOBMb9D6o0JkE3UVEHUn'
 signing_secret = '4b26af99665e5f84a4542140bdbc65c9'
 
 slack_events_adapter = SlackEventAdapter(signing_secret, "/slack/events", app)

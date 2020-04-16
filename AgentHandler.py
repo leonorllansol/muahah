@@ -11,6 +11,7 @@ import time
 import DocumentManager
 import agents
 
+from os import path
 import multiprocessing
 from multiprocessing import Process
 
@@ -66,7 +67,7 @@ class AgentHandler:
 
         t = time.time()
 
-        #candidates = DocumentManager.generateCandidates(query)
+        candidates = DocumentManager.generateCandidates(query)
 
         # for i,c in enumerate(candidates):
         #     print(i,c.getQuestion())
@@ -76,15 +77,16 @@ class AgentHandler:
         print(self.__class__.__name__ + " Candidate generation time: " + str(time.time() - t))
 
         source = ""
-        candidateQuery = ""
+        # {'agent': query}
+        candidateQueryDict = {}
         for agent in self.externalAgents:
-            flag = False
-            for elem in configsparser.getActiveAgents():
-                if agent.agentName.startswith(elem):
-                    flag = True
-                    break
-            if not flag:
-                continue
+            # flag = False
+            # for elem in configsparser.getActiveAgents():
+            #     if agent.agentName.startswith(elem):
+            #         flag = True
+            #         break
+            # if not flag:
+            #     continue
 
 
             agentTime = time.time()
@@ -97,21 +99,27 @@ class AgentHandler:
 
             try:
                 if agent.corpusPath:
-                    candidates = DocumentManager.generateCandidates(query,indexPath=agent.indexPath,corpusPath=agent.corpusPath)
 
-                    if agent.corpusPath == "corpora/ama.txt":
-                        answer = agent.requestAnswer(query,candidates, query_labels, self.AMA_labels)
-                    if agent.corpusPath == "corpora/covid.txt":
-                        answer, source, candidateQuery = agent.requestAnswer(query,candidates, query_labels, self.covid_labels)
+
+                    if agent.__class__.__name__ == "GeneralAgent":
+                        synonymsPath = "agents/externalAgents/GeneralAgent/" + agent.agentName + "/sinonimos.txt"
+                        if path.exists(synonymsPath):
+                            candidates = DocumentManager.generateCandidates(query,indexPath=agent.indexPath,corpusPath=agent.corpusPath, synonymsPath=synonymsPath)
+                        else:
+                            candidates = DocumentManager.generateCandidates(query,indexPath=agent.indexPath,corpusPath=agent.corpusPath)
+                        answer, candidateQueryDict[agent.agentName] = agent.requestAnswer(query,candidates, query_labels)
                     else:
+                        candidates = DocumentManager.generateCandidates(query,indexPath=agent.indexPath,corpusPath=agent.corpusPath)
                         answer = agent.requestAnswer(query,candidates)
 
                     #candidates = DocumentManager.generateCandidates(query)
 
             except AttributeError:
                 if(len(candidates) > 0):
-                    print(agent)
-                    answer = agent.requestAnswer(query,candidates)
+                    if agent.__class__.__name__ == "GeneralAgent":
+                        answer, candidateQueryDict[agent.agentName] = agent.requestAnswer(query,candidates, query_labels)
+                    else:
+                        answer = agent.requestAnswer(query,candidates)
                 else:
                     answer = configsparser.getNoAnswerMessage()
 
@@ -137,7 +145,7 @@ class AgentHandler:
             else:
                 agentAnswers[agent] = answer
 
-        return agentAnswers, source, candidateQuery
+        return agentAnswers, candidateQueryDict
 
     def generateInternalAgentsAnswers(self, function, agents_dict: dict, query: str) -> dict:
 

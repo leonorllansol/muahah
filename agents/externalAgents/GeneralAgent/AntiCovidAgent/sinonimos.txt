@@ -1,0 +1,2 @@
+covid 19,covid,covid19,covid-19
+coronavirus,coronavírus,vírus,virus,sars-cov-2

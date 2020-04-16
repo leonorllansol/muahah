@@ -101,18 +101,17 @@
   </agent>
   <externalAgent name="AntiCovidAgent">
     <labels>
-      <label score="1.0">CONCEITO</label>
-      <label score="1.0">GERAL</label>
+      <label score="1.0">SABER</label>
       <label score="1.0">SINTOMAS</label>
       <label score="1.0">CONTÁGIO</label>
-      <label score="1.0">HISTORIA</label>
-      <label score="1.0">PANDEMIA</label>
-      <label score="1.0">SNS</label>
+      <label score="1.0">SAUDE-PT</label>
       <label score="1.0">VACINA</label>
       <label score="1.0">TRATAMENTO</label>
-      <label score="1.0">REGRAS</label>
       <label score="1.0">PROTECÇÃO</label>
-      <label score="1.0">CONCEITOS</label>
+      <label score="1.0">AGRICULTURA</label>
+      <label score="1.0">ALIMENTOS</label>
+      <label score="1.0">ECONOMIA</label>
+      <label score="1.0">PROTEÇÃO</label>
     </labels>
   </externalAgent>
 </agents>

@@ -77,17 +77,17 @@ getPriorities
     <externalAgentsPath>agents/externalAgents/</externalAgentsPath>
     <decisionMethods>
         <decisionMethod name="SimpleMajority" weight="10"/>
-        <decisionMethod name="PrioritySystem" weight="10"/>
-        <decisionMethod name="AgentMultiAnswers" weight="10"/>
-        <decisionMethod name="PrioritySystemMultiAnswers" weight="10"/>
-        <decisionMethod name="PrioritySystemDevelopmentMulti" weight="10"/>
+        <decisionMethod name="PrioritySystem" weight="0"/>
+        <decisionMethod name="AgentMultiAnswers" weight="0"/>
+        <decisionMethod name="PrioritySystemMultiAnswers" weight="0"/>
+        <decisionMethod name="PrioritySystemDevelopmentMulti" weight="0"/>
         <decisionMethod name="WeightedVote" weight="0"/>
-        <decisionMethod name="query_agent" weight="5"/>
-        <decisionMethod name="answer_impersonal" weight="5"/>
+        <decisionMethod name="query_agent" weight="60"/>
+        <decisionMethod name="answer_impersonal" weight="20"/>
         <decisionMethod name="query_answer" weight="10"/>
-        <decisionMethod name="YesNoStrategy" weight="10"/>
-        <decisionMethod name="OrStrategy" weight="10"/>
-        <decisionMethod name="AMAStrategy" weight="10"/>
+        <decisionMethod name="YesNoStrategy" weight="0"/>
+        <decisionMethod name="OrStrategy" weight="0"/>
+        <decisionMethod name="AMAStrategy" weight="0"/>
     </decisionMethods>
     <answerAmount>1</answerAmount>
 
@@ -101,7 +101,7 @@ getPriorities
         <agent name="YesNoAgent" active="0"/>
         <agent name="OrAgent" active="0"/>
         <agent name="AMAAgent" active="0"/>
-        <agent name="AntiCovidAgent" active="1"/>
+        <agent name="GeneralAgent" active="1"/>
         <!-- internal agents -->
         <agent name="talkpedia" active="0"/>
         <agent name="cheat" active="0"/>

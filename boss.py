@@ -1,19 +1,18 @@
-import operator, classification, plug_and_play, query_agent_label_match, query_answer_label_match
+import classification, plug_and_play, query_agent_label_match, query_answer_label_match
 from agents import *
-import multiprocessing
+import multiprocessing, logging, sys, time, subprocess, os, operator, copy
 import numpy as np
-import os
 from multiprocessing import Process
 import configsparser
 from DefaultAnswers import HighestWeightedScoreSelection, MultipleAnswerSelection
-import logging, sys, time
-import subprocess
 from Decisor import Decisor
 from AgentHandler import AgentHandler
 from WeightedMajority import WeightedMajority
 import DocumentManager
 import agents.internalAgents
-import copy
+import excelToSubtle, labelsIntoXML
+import xml.etree.ElementTree as ET
+
 
 curr_dir = os.path.dirname(os.path.abspath(__file__))
 
@@ -129,7 +128,7 @@ def multiAgentAnswerMode(agents_dict, system_dict, corpora_dict):
     :param system_dict: A dictionary containing all of the system information contained in the system config xml file
     :return: Not applicable.
     """
-    AMA_labels = open("AMAlabels.txt").readlines()
+    AMA_labels = open("corpora/AMAlabels.txt").readlines()
     for i in range(len(AMA_labels)):
         AMA_labels[i] = AMA_labels[i].strip('\n')
 
@@ -210,7 +209,7 @@ def getAnswer(query:str, firstCall: bool):
     corpora_dict = configsparser.getCorporaProperties(curr_dir + '/config/corpora_config.xml')
     system_dict = configsparser.getSystemProperties(curr_dir + '/config/config.xml')
 
-    AMA_labels = open("AMAlabels.txt").readlines()
+    AMA_labels = open("corpora/AMAlabels.txt").readlines()
     for i in range(len(AMA_labels)):
         AMA_labels[i] = AMA_labels[i].strip('\n')
 
@@ -228,8 +227,7 @@ def getAnswer(query:str, firstCall: bool):
     predictions_query = classification.predict(corpora_dict['query'], query, 'query')
 
 
-    externalAgentsAnswers, source, candidateQuery = agentManager.generateExternalAgentsAnswers(query, predictions_query)
-
+    externalAgentsAnswers, candidateQueryDict = agentManager.generateExternalAgentsAnswers(query, predictions_query)
     # Mariana's agents
     internalAgentsAnswers = agentManager.generateInternalAgentsAnswers(get_agent_answer, agents_dict, query)
 
@@ -311,13 +309,13 @@ def getAnswer(query:str, firstCall: bool):
         if externalAgentsAnswers[agent] == answer_max_weight:
             agent_max_weight = agent
             break
-    if agent_max_weight == 'AntiCovidAgent' and answer_max_weight != configsparser.getNoAnswerMessage():
+    if agent_max_weight in ['AntiCovidAgent','AMAAgent'] and answer_max_weight != configsparser.getNoAnswerMessage():
         answer = ""
-        answer += "Percebi que a sua pergunta é: \"" + candidateQuery + "\".\n"
+        answer += "Percebi que a sua pergunta é: \"" + candidateQueryDict[agent_max_weight] + "\".\n"
         answer += answer_max_weight
-        if isinstance(source, float):
-            source = "Desconhecida"
-        answer += " Fonte: " + source
+        # if isinstance(source, float):
+        #     source = "Desconhecida"
+        # answer += " Fonte: " + source
         answer_max_weight = answer
 
     print()
@@ -330,8 +328,31 @@ def getAnswer(query:str, firstCall: bool):
 
     return answer_max_weight
 
+def createCorpora():
+    tree = ET.parse('agents/externalAgents/GeneralAgent/config.xml')
+    root = tree.getroot()
+    for i in range(len(root.findall('corpusPath'))):
+        corpusPath = root.findall('corpusPath')[i].text
+        agentName = root.findall('corpusPath')[i].get('name')
+        excelPath = root.findall('excelPath')[i].text
+        indexPath = root.findall('indexPath')[i].text
+        labelsPath = root.findall('labelsPath')[i].text
+
+        path = "" + corpusPath
+        s = "corpora/"
+        t = ".txt"
+        if s in path:
+            path = path.replace(s,"")
+        if t in path:
+            path = path.replace(t,"")
+        keyword = path
+        if excelPath != 'None':
+            excelToSubtle.createQueryAnswerFromExcel(excelPath, keyword, corpusPath, labelsPath)
+        labelsIntoXML.parseLabelsIntoXML(agentName, labelsPath)
+
 if __name__ == "__main__":
     '''Mariana'''
+    createCorpora()
     agents_dicti = configsparser.getAgentsProperties(curr_dir + '/config/agents_config.xml')
     corpora_dicti = configsparser.getCorporaProperties(curr_dir + '/config/corpora_config.xml')
     system_dicti = configsparser.getSystemProperties(curr_dir + '/config/config.xml')

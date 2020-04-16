@@ -16,6 +16,8 @@ def query_agent_label_match(query_labels: list, agents_dict: dict) -> dict:
     score_dict = {}
     for agent in agents_dict:
         labels = agents_dict[agent]['labels']
+        if agent == 'AntiCovidAgent':
+            print(labels)
         for label in labels:
             if label in query_labels:
                 if agent in score_dict:

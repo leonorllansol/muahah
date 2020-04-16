@@ -39,8 +39,9 @@ def openIndex(indexPath, corpusPath):
 
 
 
-def generateCandidates(inputQuestion, indexPath=configsparser.getIndexPath(), corpusPath=configsparser.getCorpusPath()):
-
+def generateCandidates(inputQuestion, indexPath=configsparser.getIndexPath(), corpusPath=configsparser.getCorpusPath(), synonymsPath=""):
+    if synonymsPath != "":
+        inputQuestion = getSentenceWithNormalizedSynonyms(inputQuestion, synonymsPath)
     hitsPerQuery = int(configsparser.getHitsPerQuery())
     index = openIndex(indexPath, corpusPath)
 
@@ -54,7 +55,17 @@ def generateCandidates(inputQuestion, indexPath=configsparser.getIndexPath(), co
     return candidates
 
 
-
+def getSentenceWithNormalizedSynonyms(sentence,path):
+    synonyms = []
+    for line in open(path).readlines():
+        synonyms.append(line.strip('\n').split(","))
+    tokens = sentence.split()
+    for i in range(len(tokens)):
+        for el in synonyms:
+            if tokens[i] in el:
+                tokens[i] = el[0]
+    new_sentence = " ".join(tokens)
+    return new_sentence
 
 def subtitleCorpusReader(corpusPath):
 
