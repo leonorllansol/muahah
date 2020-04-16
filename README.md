@@ -46,14 +46,20 @@ This process is accomplished through the use of four modules:
   - Optionally, you can have the following columns:
   	- FONTE - the source of the pair question-answer
 	- PARÁFRASES - a list of paraphrases of the question, separated by '***'
-  - In the config.xml in agents.externalAgents.GeneralAgent, change the tag `<agentAmount>` to match the number of agents and add the following lines:
-  `<excelPath name='NewAgent'>corpora/NewAgent-FAQ.xlsx</excelPath>` - path to the file with questions and answers. If you already have a text file in SubTle format, put `<excelPath name='NewAgent'>None</excelPath>`.
+  - In the config.xml in `agents.externalAgents.GeneralAgent`, change the tag `<agentAmount>` to match the number of agents and add the following lines, where the attribute `name` is the name of the new agent:
   
-    `<corpusPath name='NewAgent'>corpora/NewAgent.txt</corpusPath>`- if the value of excelPath is a file, corpusPath is the path where the subtitle version will be created. It does not need to be an existent file. If the value of excelPath is None, this is the path to the existing file with subtitle like questions and answers.
+`<excelPath name='NewAgent'>corpora/NewAgent-FAQ.xlsx</excelPath>` - path to the file with questions and answers. If you already have a text file in subtitles format, put `<excelPath name='NewAgent'>None</excelPath>`.
+  
+`<corpusPath name='NewAgent'>corpora/NewAgent.txt</corpusPath>`- if the value of excelPath is a file, corpusPath is the path where the subtitle version will be created. It does not need to be an existent file. If the value of excelPath is None, this is the path to the existing file with subtitle like questions and answers.
     
-    `<indexPath name='NewAgent'>resources/whooshIndexes/NewAgent</indexPath>` - path to the folder where the Woosh indexes for this agent will be created.
+`<indexPath name='NewAgent'>resources/whooshIndexes/NewAgent</indexPath>` - path to the folder where the Woosh indexes for this agent will be created.
     
-    `<labelsPath name='NewAgent'>corpora/NewAgentLabels.txt</labelsPath>` - path to the file with agent labels, does not need to be an existent file.
+`<labelsPath name='NewAgent'>corpora/NewAgentLabels.txt</labelsPath>` - path to the file with agent labels, does not need to be an existent file.
+    
+  - Optionally, you can have a list of synonyms within the domain of your new agent. This list must be a txt file, where each line contains one word and its synonyms in the following format:
+  
+  `word,synonym1,synonym2,...,synonymN`
+  If one of the synonyms is found in a user query, it will be replaced by the main word. This file must be in a folder with the agent's name inside GeneralAgent, for example, `agents.externalAgents.GeneralAgent.NewAgent`
   ### Creating an External Agent
   - An external agent is defined by two components: the configuration file, and the source code.
   - The configuration file serves as the header of the agent, allowing it to be detected and added to the pool of available agents. It also allows the user to set configurable parameters without directly interacting with the source code. Each agent has its own configuration file.
