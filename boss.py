@@ -352,7 +352,8 @@ def createCorpora():
 
 if __name__ == "__main__":
     '''Mariana'''
-    createCorpora()
+    if 'GeneralAgent' in configsparser.getActiveAgents():
+        createCorpora()
     agents_dicti = configsparser.getAgentsProperties(curr_dir + '/config/agents_config.xml')
     corpora_dicti = configsparser.getCorporaProperties(curr_dir + '/config/corpora_config.xml')
     system_dicti = configsparser.getSystemProperties(curr_dir + '/config/config.xml')
