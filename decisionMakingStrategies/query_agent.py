@@ -14,7 +14,6 @@ class query_agent(DecisionMethod):
          #for agent in mergedAgentAnswers.keys():
             #score_dict[agent] = 0.0
         score_dict = query_agent_label_match.query_agent_label_match(query_labels, agents_dict)
-        print(score_dict)
         to_delete = []
         for agent, score in score_dict.items():
             if not agent in defaultAgentsAnswers:
