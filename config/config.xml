@@ -100,7 +100,6 @@ getPriorities
         <agent name="LevenshteinAgent" active="0"/>
         <agent name="YesNoAgent" active="0"/>
         <agent name="OrAgent" active="0"/>
-        <agent name="AMAAgent" active="0"/>
         <agent name="GeneralAgent" active="1"/>
         <!-- internal agents -->
         <agent name="talkpedia" active="0"/>

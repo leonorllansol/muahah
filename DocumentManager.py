@@ -39,9 +39,11 @@ def openIndex(indexPath, corpusPath):
 
 
 
-def generateCandidates(inputQuestion, indexPath=configsparser.getIndexPath(), corpusPath=configsparser.getCorpusPath(), synonymsPath=""):
+def generateCandidates(inputQuestion, indexPath=configsparser.getIndexPath(), corpusPath=configsparser.getCorpusPath(), synonymsPath="", acronymsPath=""):
     if synonymsPath != "":
-        inputQuestion = getSentenceWithNormalizedSynonyms(inputQuestion, synonymsPath)
+        inputQuestion = getSentenceWithNormalizedSynonymsAcronyms(inputQuestion, synonymsPath)
+    if acronymsPath != "":
+        inputQuestion = getSentenceWithNormalizedSynonymsAcronyms(inputQuestion, acronymsPath)
     hitsPerQuery = int(configsparser.getHitsPerQuery())
     index = openIndex(indexPath, corpusPath)
 
@@ -55,7 +57,7 @@ def generateCandidates(inputQuestion, indexPath=configsparser.getIndexPath(), co
     return candidates
 
 
-def getSentenceWithNormalizedSynonyms(sentence,path):
+def getSentenceWithNormalizedSynonymsAcronyms(sentence,path):
     synonyms = []
     for line in open(path).readlines():
         synonyms.append(line.strip('\n').split(","))

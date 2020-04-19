@@ -16,7 +16,6 @@ import pandas as pd
 import tfidf
 class GeneralAgent:
     def __init__(self, configs, i):
-        print(configs)
         self.agentName = list(configs['corpusPath'].keys())[i]
         self.corpusPath = list(configs['corpusPath'].values())[i]
         self.indexPath = list(configs['indexPath'].values())[i]

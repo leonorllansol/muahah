@@ -103,10 +103,13 @@ class AgentHandler:
 
                     if agent.__class__.__name__ == "GeneralAgent":
                         synonymsPath = "agents/externalAgents/GeneralAgent/" + agent.agentName + "/sinonimos.txt"
-                        if path.exists(synonymsPath):
-                            candidates = DocumentManager.generateCandidates(query,indexPath=agent.indexPath,corpusPath=agent.corpusPath, synonymsPath=synonymsPath)
-                        else:
-                            candidates = DocumentManager.generateCandidates(query,indexPath=agent.indexPath,corpusPath=agent.corpusPath)
+                        if not path.exists(synonymsPath):
+                            synonymsPath = ""
+                        acronymsPath = "agents/externalAgents/GeneralAgent/" + agent.agentName + "/acronimos.txt"
+                        if not path.exists(acronymsPath):
+                            acronymsPath = ""
+                            
+                        candidates = DocumentManager.generateCandidates(query,indexPath=agent.indexPath,corpusPath=agent.corpusPath, synonymsPath=synonymsPath, acronymsPath=acronymsPath)
                         answer, candidateQueryDict[agent.agentName] = agent.requestAnswer(query,candidates, query_labels)
                     else:
                         candidates = DocumentManager.generateCandidates(query,indexPath=agent.indexPath,corpusPath=agent.corpusPath)
