@@ -1,3 +1,0 @@
-DGS,Direção Geral de Saúde
-OMS,Organização Mundial de Saúde
-SNS,Serviço Nacional de Saúde
