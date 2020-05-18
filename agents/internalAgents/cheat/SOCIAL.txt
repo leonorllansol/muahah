@@ -1,0 +1,20 @@
+bom dia	Bom dia!
+boa tarde	Boa tarde!
+boas	Bons dias!
+ola	Oi!
+oi	Olá! 
+hey	Oi!
+boa noite	Boa noite!
+ola como vai	Olá! Tudo bem, obrigado, e consigo?
+ola como estás	Olá! Tudo bem, obrigado, e consigo?
+ola como está	Olá! Tudo bem, obrigado, e consigo?
+oi tudo bem	Olá! Tudo bem, obrigado, e consigo?		
+oi como está	Olá! Tudo bem, obrigado, e consigo?
+oi como estás	Olá! Tudo bem, obrigado, e consigo?
+ate amanhã	Adeus!
+ate logo	Até logo!
+obrigado	Ora essa!
+obrigada	Ora essa!
+adeus	até uma próxima!
+ate uma	próxima Até lá!
+xau	Adeus!

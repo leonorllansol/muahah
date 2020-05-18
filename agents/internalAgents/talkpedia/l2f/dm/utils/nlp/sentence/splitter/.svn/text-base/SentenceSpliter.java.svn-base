@@ -1,0 +1,7 @@
+package l2f.dm.utils.nlp.sentence.splitter;
+
+import java.util.List;
+
+public interface SentenceSpliter {
+	public List<String> split(String str);
+}
