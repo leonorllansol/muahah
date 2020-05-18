@@ -1,0 +1,20 @@
+Query: olá
+Answer: I am Groot!
+lang=en
+tagdir=/home/nono/Documents/TESE/chatuga-sss/resources/TREETAGGER
+tagbin=/home/nono/Documents/TESE/chatuga-sss/resources/TREETAGGER/bin/tree-tagger
+tagparfile=/home/nono/Documents/TESE/chatuga-sss/resources/TREETAGGER/lib/portuguese.par
+tagopt=-token -lemma -sgml -quiet -no-unknown
+taginencoding=utf-8
+tagoutencoding=utf-8
+taginencerr=replace
+tagoutencerr=replace
+abbrevfile=/home/nono/Documents/TESE/chatuga-sss/resources/TREETAGGER/lib/english-abbreviations
+Read 289 abbreviations from file: /home/nono/Documents/TESE/chatuga-sss/resources/TREETAGGER/lib/english-abbreviations
+Started TreeTagger from command: ['/home/nono/Documents/TESE/chatuga-sss/resources/TREETAGGER/bin/tree-tagger', '-token', '-lemma', '-sgml', '-quiet', '-no-unknown', '/home/nono/Documents/TESE/chatuga-sss/resources/TREETAGGER/lib/portuguese.par']
+Writing starting part to pipe.
+Writing data to pipe.
+Writing ending and flushing part to pipe.
+Finished writing data to pipe. Pipe flushed.
+Query: quantos anos tens?
+Answer: Tenho 65 anos.
