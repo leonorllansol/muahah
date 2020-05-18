@@ -32,13 +32,34 @@ This process is accomplished through the use of four modules:
   - Finally, to run the program, execute the command `python3 boss.py`. The program will prompt you with "Diga algo: ", after which you can type your query.
   - When you desire to end the interaction, type `exit`.
   
+  The following figure shows a high level architecture of the system: 
   
-## Adding a new agent:
+  ![Architecture](https://github.com/leonorllansol/chatuga-sss/blob/master/images/highLevelArchi.jpg)
+  
+  When the user poses a query to the **Boss**, the query is sent to every **agent**. Each agent returns an answer. The set of answers returned by all agents is passed to each **decision making strategy**, which chooses one to return to the **Boss**, based on its heuristic. The Boss receives the set of answers returned by all strategies, and chooses one to return to the user based on its confidence on each strategy.
+  
+## Agents
+  - Each agent receives the user query and returns an answer.
   - There are two kinds of agents which can be added:
   	- If your agent takes the candidates retrieved by Whoosh using the SubTle corpus and uses some metric to choose the best one, you will create an **External Agent**.
 	- If your agent uses a different corpus, you will create an instance of a **General Agent**.
-	
-  ### Creating a General Agent
+  - The following external agents are available:
+  	- Cosine  
+	- Discord
+	- Edgar
+	- Faqs
+	- Groot
+	- Jaccard
+	- KMeans
+	- Levenshtein
+	- Or
+	- Yes No
+  - The following general agents are available:
+  	- AMA
+	- Covid
+  - Agents can be active or inactive, as stated in the corresponding attribute in the `config/config.xml`.
+### Adding a new agent:
+  #### Creating a General Agent
   - To create a GeneralAgent, it is required to have a file with pairs question-answer, in the format xlsx or csv. It must have the following columns:
   	- TÓPICO - the label of the question
 	- PERGUNTA - the question
@@ -68,17 +89,17 @@ This process is accomplished through the use of four modules:
   
   - For efficiency reasons, if the expansion of an acronym is found in a user query, it will be replaced by the acronym. This file must be in a folder with the agent's name inside GeneralAgent, for example, `agents.externalAgents.GeneralAgent.NewAgent.acronimos.txt`
   
-  ### Creating an External Agent
+  #### Creating an External Agent
   - An external agent is defined by two components: the configuration file, and the source code.
   - The configuration file serves as the header of the agent, allowing it to be detected and added to the pool of available agents. It also allows the user to set configurable parameters without directly interacting with the source code. Each agent has its own configuration file.
   - The source code of the agent is composed by one or more source files, whose goal is to deliver an answer upon receiving a user query (and, optionally, a set of candidates).
-  #### 1. Adding the new agent to the project's configuration files
+  ##### 1. Adding the new agent to the project's configuration files
   - Agents can be activated and deactivated in the config.xml file:
   `<agents>
      <agent name="JaccardAgent" active="1"/>
      <agent name="LevenshteinAgent" active="0"/>
   </agents>`
-  In the previous example, JaccardAgent is activated, while LevenshteinAgent is deactivated, so the latter will not be instantiated not will it return an answer.
+  In the previous example, JaccardAgent is activated, while LevenshteinAgent is deactivated, so the latter will not be instantiated nor will it return an answer.
   - Each agent can have labels associated to it, for example:
     - QUESTION - agent is good at answering questions
     - NON_QUESTION - agent is good at answering non questions
@@ -91,7 +112,7 @@ This process is accomplished through the use of four modules:
 			<label score='1.0'>YN_QUESTION</label>
 		</labels>
 	</externalAgent>`
-  #### 2. Paths and Directories
+  ##### 2. Paths and Directories
   Before you start building your new agent, you should know where it should be placed in order to be found by chatuga-SSS.
   For the context of building agents, the folder structure of chatuga-SSS is as follows:
   `chatuga-sss
@@ -105,7 +126,7 @@ This process is accomplished through the use of four modules:
                 └── Agent2.py
 `
   When creating a new agent, the directory containing the source code and config file of the agent should be inside the `externalAgents` folder, and the configuration file of the agent **must** be named `config.xml`.
-  #### 3. Configuration file
+  ##### 3. Configuration file
   When creating the `config.xml` file for your agent, you should follow the structure below:
 
     <config>
@@ -115,7 +136,7 @@ This process is accomplished through the use of four modules:
     </config>
 
 All defined parameters must be encapsulated by the exterior tag `<config>`, and the `<mainClass>`must be defined with the same name as the main class of the agent.
-  #### 4. Source Code
+  ##### 4. Source Code
   As mentioned before, an agent can have more than one source file, but it must have a **main** source file. The main file usually has the same name as the agent's folder, and it corresponds to the connection point between chatuga-sss and the agent.
 
 That said, the following indications must be followed when creating a new agent:
@@ -131,7 +152,20 @@ That said, the following indications must be followed when creating a new agent:
             ├── BasicQA.py
             └── SimpleQA.py
   
-## Adding a new Decision Making Strategy:
+## Decision Making Strategies
+  - Each strategy receives the set of answers given by all agents, and returns one to the Boss, according to its heuristic.
+  - The available Decision Making Strategies are:
+  	- Simple Majority - chooses more frequent answer
+	- Priority System - chooses the answer of the agent with highest priority
+	- Weighted Vote - chooses the answer based on the weights given to each agent while training in learning mode
+	- Yes No - chooses an answer that contains 'Yes' or 'No'
+	- Or - chooses an answer with the phrase before or after the word 'or'
+	- Query Agent - chooses the answer of the agent whose domain is the same as the query domain
+	- Answers Impersonal - chooses an answer classified as impersonal
+	- Query Answer - chooses the answer that is closer to the question
+  - Each strategy has a weight associated, which can be changed in the `config/config.xml`.
+	
+### Adding a new Decision Making Strategy:
   - Given a set of answers, a Decision Making Strategy chooses one of them, according to its heuristics. For example, SimpleMajority chooses the most given answer, and YesNoStrategy chooses an answer which contains "yes" or "no".
   - 1. A decision making strategy can be implemented in a single file: in folder decisionMakingStrategies, create a new subclass of DecisionMethod. This class **must** have a method getAnswer, which returns an answer.
   - 2. Add the name of the new class and corresponding class and arguments to, respectively, the dictionaries all_strategies and args_by_strategy of Decisor.py.
