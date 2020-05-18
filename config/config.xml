@@ -1,0 +1,149 @@
+<config>
+  <language>portuguese</language>
+
+  <indexer>
+    <corpusPath>corpora/1million.txt</corpusPath>
+    <normalizersPath>resources/normalizers/puncts.txt</normalizersPath>
+    <stopwords>resources/stopwords/portuguese_stop.txt</stopwords>
+    <indexPath>resources/whooshIndexes/1million</indexPath>
+    <hitsPerQuery>20</hitsPerQuery>
+    <usePreviouslyCreatedIndex>true</usePreviouslyCreatedIndex>
+  </indexer>
+
+  <normalizers>RemoveDiacriticalMarks</normalizers>
+
+  <!-- Similarity measures to use -->
+  <similarityMeasure name="Dice" weight="25"/>
+  <similarityMeasure name="Jaccard" weight="25"/>
+  <similarityMeasure name="EditDistance" weight="50"/>
+
+
+  <!-- Answer selection criteria -->
+  <criteria>
+    <criterion name="AnswerFrequency" weight="0"/>
+    <criterion name="AnswerSimilarityToUserQuestion" weight="30"/>
+    <criterion name="QuestionSimilarityToUserQuestion" weight="70"/>
+    <criterion name="SimpleTimeDifference" weight="0"/>
+    <criterion name="SimpleConversationContext" weight="0" nPreviousInteractions="2"/>
+  </criteria>
+
+
+  <!-- Parameters for the multiagent mode of SaySomethingSmart
+
+    defaultAgentsMode: Running mode of the framework
+          classic     - Runs the default version of SSS (Lexical metrics, Magarreiro's)
+          multi       - Runs the multiagent system, prompting the user for dialogue
+          sequential  - Runs the multiagent system, reading questions from a text file sequentially
+          learning    - Runs the learning system with the currently configured agents in order to learn the weights of each one
+          evaluation  - Evaluates a given set of agents + weights against a set of interactions with a defined corpus. Accuracy is measured through exact matching, so it is highly recommended for the interactions to be present in the corpus
+
+    externalAgentsPath: Path to the externalAgents folder (default is resources/externalAgents)
+
+boss
+    decisionMethod: Decision method to use. Current available decision methods are:
+
+      SimpleMajority                    Each agent sends a single answer, and the most frequent answer given by the agents is the one delivered to the user
+
+      PrioritySystem                    Agents have explicitly defined priorities (each agent sends a single answer);
+                                        If an agent with the highest priority can answer the user's query, that answer is delivered to the user and other agents' answers are ignored;
+                                        An agent with priority 1 has higher priority than an agent with priority 5;
+                                        If an agent is not specified in the priority settings, the system will assume that it has a lower priority than the specified agents
+
+      AgentMultiAnswers                 Similar to SimpleMajority, but each agent can deliver multiple possible answers instead of a single one;
+                                        however, the user still only receives a single response;
+
+      PrioritySystemMultiAnswers        Similar to PrioritySystem, but each agent can deliver multiple possible answers to be considered by the system instead of a single one;
+                                        however, the user still only receives a single response;
+
+      PrioritySystemDevelopmentMulti    Similar to PrioritySystemMultiAnswers, but the user receives multiple possible answers to the sent query;
+
+      WeightedVote                      Each agent has a given weight, specified by the <weightResults> parameter; when evaluating responses, the answer with the highest sum of                                          weights between all agents will be delivered to the user
+                                        Weights are usually calculated through the learning module, and must be specified in the format {'AGENT_A_NAME' : AGENT_A_WEIGHT, 'AGENT_B_NAME' : AGENT_B_WEIGHT}. Additionally, it is recommended that the sum of the agents' weights add up to 100.
+                                        Weights are expressed in percentages. For example, if I have Agent1 and Agent2 in my system, and I wish to give a weight of 60% to Agent1 and a weight of 40% to Agent2, then the weight specification will be: {'Agent1': 60, 'Agent2': 40}.
+                                        All of the enabled agents present in the system must be accounted for in the weight specification.
+
+    query_agent                         The labels of the agent's domain of expertise are compared with the labels of the query, obtained from a machine learning module.
+    answer_personal                     Given a set of answers, similarity measures are used to compare agents' answers to a corpus of answers. In this case, a query classified with label "PERSONAL" will be compared with a corpus of personal answers.
+    answer_impersonal                   Same as answer_personal, but a query classified with label "IMPERSONAL" will be compared with a corpus of impersonal answers.
+    query_answer                        The labels of the agent's answer are compared with the labels of the query, obtained from a machine learning module.
+getPriorities
+
+    answerAmount: Number of answers to be delivered to the user (1 is the default); this parameter is only considered if the PrioritySystemDevelopmentMulti decision method is active.
+
+  -->
+
+  <multiagentParameters>
+    <defaultAgentsMode>multi</defaultAgentsMode>
+    <externalAgentsPath>agents/externalAgents/</externalAgentsPath>
+    <decisionMethods>
+        <decisionMethod name="SimpleMajority" weight="10"/>
+        <decisionMethod name="PrioritySystem" weight="0"/>
+        <decisionMethod name="AgentMultiAnswers" weight="0"/>
+        <decisionMethod name="PrioritySystemMultiAnswers" weight="0"/>
+        <decisionMethod name="PrioritySystemDevelopmentMulti" weight="0"/>
+        <decisionMethod name="WeightedVote" weight="0"/>
+        <decisionMethod name="query_agent" weight="60"/>
+        <decisionMethod name="answer_impersonal" weight="20"/>
+        <decisionMethod name="query_answer" weight="10"/>
+        <decisionMethod name="YesNoStrategy" weight="0"/>
+        <decisionMethod name="OrStrategy" weight="0"/>
+        <decisionMethod name="AMAStrategy" weight="0"/>
+    </decisionMethods>
+    <answerAmount>1</answerAmount>
+
+    <agents>
+        <!-- external agents -->
+        <agent name="CosineAgent" active="0"/>
+        <agent name="EdgarAgent" active="0"/>
+        <agent name="GrootAgent" active="0"/>
+        <agent name="JaccardAgent" active="0"/>
+        <agent name="LevenshteinAgent" active="0"/>
+        <agent name="YesNoAgent" active="0"/>
+        <agent name="OrAgent" active="0"/>
+        <agent name="GeneralAgent" active="1"/>
+        <!-- internal agents -->
+        <agent name="talkpedia" active="1"/>
+        <agent name="cheat" active="0"/>
+    </agents>
+  </multiagentParameters>
+
+  <system>
+	<query-agent-label-match>True</query-agent-label-match>
+	<answer-classification-impersonal>True</answer-classification-impersonal>
+	<answer-classification-personal
+		sim_measure='tfidf_normal'>True
+	</answer-classification-personal>
+	<query-answer-label-match>True</query-answer-label-match>
+    </system>
+
+  <sequentialConversationParameters>
+    <questionTxtFile>resources/perguntas/testeSSS/perguntasBasicas_2.txt</questionTxtFile>
+    <sequentialTargetTxtFile>trainedSSS_multi_basicas.txt</sequentialTargetTxtFile>
+  </sequentialConversationParameters>
+
+
+
+  <prioritySettings>
+    <agentPriority name="EdgarAgent" priority="1"></agentPriority>
+  </prioritySettings>
+
+
+  <learning>
+    <interactions>resources/learning/cornell_dividido/cornell-cv-test1.txt</interactions>
+    <lines>resources/learning/cmdc/movie_lines.txt</lines>
+    <inputSize>2000</inputSize>
+    <decimalPlaces>0</decimalPlaces>
+    <etaFactor>4</etaFactor>
+    <strategy>BestCandidate</strategy>
+    <initialWeights>{'CosineAgent1': 0.01, 'CosineAgent2': 0.01, 'CosineAgent3': 0.01, 'GrootAgent': 99.91, 'JaccardAgent1': 0.01, 'JaccardAgent2': 0.01, 'JaccardAgent3': 0.01, 'LevenshteinAgent1': 0.01, 'LevenshteinAgent2': 0.01, 'LevenshteinAgent3': 0.01}</initialWeights>
+  </learning>
+
+  <evaluation>
+    <weightResults>{'CosineAgent': 42.01502497353838, 'EdgarAgent': 0.00014519886548031838, 'GrootAgent': 2.386471500266396e-05, 'JaccardAgent': 15.969589359123805, 'YesNoAgent': 2.545444569402473e-05, 'LevenshteinAgent': 42.01502497353838, 'OrAgent': 2.0976907767562447e-05, 'AMAAgent': 0.00014519886548031838}</weightResults>
+  </evaluation>
+
+
+  <noAnswerFoundPT>Não sei responder a isso</noAnswerFoundPT>
+  <noAnswerFoundEN>I'm sorry, but I do not know how to answer that.</noAnswerFoundEN>
+
+</config>
