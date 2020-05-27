@@ -67,7 +67,6 @@ class AgentHandler:
         t = time.time()
 
         candidates = DocumentManager.generateCandidates(query)
-
         # for i,c in enumerate(candidates):
         #     print(i,c.getQuestion())
         #     print(i,c.getAnswer())
@@ -107,21 +106,26 @@ class AgentHandler:
                         acronymsPath = "agents/externalAgents/GeneralAgent/" + agent.agentName + "/acronimos.txt"
                         if not path.exists(acronymsPath):
                             acronymsPath = ""
-
-                        candidates = DocumentManager.generateCandidates(query,indexPath=agent.indexPath,corpusPath=agent.corpusPath, synonymsPath=synonymsPath, acronymsPath=acronymsPath)
-                        answer, candidateQueryDict[agent.agentName] = agent.requestAnswer(query,candidates, query_labels)
+                        if agent.useWhoosh:
+                            candidates = DocumentManager.generateCandidates(query,indexPath=agent.indexPath,corpusPath=agent.corpusPath, synonymsPath=synonymsPath, acronymsPath=acronymsPath)
+                            agent.setCandidates(candidates)
+                        answer, candidateQueryDict[agent.agentName] = agent.requestAnswer(query, query_labels)
                     else:
-                        candidates = DocumentManager.generateCandidates(query,indexPath=agent.indexPath,corpusPath=agent.corpusPath)
-                        answer = agent.requestAnswer(query,candidates)
+                        if agent.useWhoosh:
+                            candidates = DocumentManager.generateCandidates(query,indexPath=agent.indexPath,corpusPath=agent.corpusPath)
+                            agent.setCandidates(candidates)
+                        answer = agent.requestAnswer(query)
 
-                    #candidates = DocumentManager.generateCandidates(query)
+                    candidates = DocumentManager.generateCandidates(query)
 
             except AttributeError:
                 if(len(candidates) > 0):
+                    if agent.useWhoosh:
+                        agent.setCandidates(candidates)
                     if agent.__class__.__name__ == "GeneralAgent":
-                        answer, candidateQueryDict[agent.agentName] = agent.requestAnswer(query,candidates, query_labels)
+                        answer, candidateQueryDict[agent.agentName] = agent.requestAnswer(query, query_labels)
                     else:
-                        answer = agent.requestAnswer(query,candidates)
+                        answer = agent.requestAnswer(query)
                 else:
                     answer = configsparser.getNoAnswerMessage()
 

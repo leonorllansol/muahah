@@ -3,14 +3,18 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.cluster import KMeans
 from collections import Counter, defaultdict
 
-class KMeansAgent:
+import os, sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from Agent import Agent
+
+class KMeansAgent(Agent):
     def __init__(self,configs):
-        self.agentName = self.__class__.__name__
+        super(KMeansAgent, self).__init__(configs)
         self.normalizeUserInput = True
 
 
-    def requestAnswer(self,userInput,candidates):
-        
+    def requestAnswer(self,userInput):
+        candidates = self.candidates
         firstCandidate = candidates.pop(0).getNormalizedAnswer()
         answers = [firstCandidate]
         word_set = set(firstCandidate.split())
@@ -35,7 +39,7 @@ class KMeansAgent:
 
         for answer in answers:
             dictTfs[answer] = compute_tf(dictWords[answer],answer.split())
-        
+
 
         idf = compute_idf(dictWords)
 
@@ -67,7 +71,7 @@ class KMeansAgent:
         #for k, v in sorted(clusDict.items()):
         #    print(k, v)
 
-        
+
         #maxClusterSize = sorted( ((v,k) for k,v in counter.items()), reverse=True)[0][0]
 
 
@@ -95,9 +99,9 @@ class KMeansAgent:
 
         return bestPair.getAnswer()
 
-        
 
-        
+
+
 
 
 
@@ -122,7 +126,7 @@ def compute_idf(word_dicts):
         for word, count in word_dicts[k].items():
             if count > 0:
                 idf[word] += 1
-    
+
     for word, v in idf.items():
         idf[word] = math.log(n / float(v))
     return idf
@@ -133,4 +137,3 @@ def compute_tf_idf(tf, idf):
     for word, v in tf.items():
         tf_idf[word] = v * idf[word]
     return tf_idf
-    

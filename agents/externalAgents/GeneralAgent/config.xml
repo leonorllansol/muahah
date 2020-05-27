@@ -15,5 +15,6 @@
 
 
     <threshold>0.35</threshold>
+    <useWhoosh>true</useWhoosh>
     <stopwords>resources/stopwords/edgar_stop.txt</stopwords>
 </config>

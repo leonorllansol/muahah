@@ -3,7 +3,7 @@
     <mainClass>OrAgent</mainClass>
     <agentAmount>1</agentAmount>
     <stopwords>resources/stopwords/edgar_stop.txt</stopwords>
-    
+    <useWhoosh>true</useWhoosh>
     <variedParameters>questionSimValue,answerSimValue</variedParameters>
 
     <questionSimValue>0.5,0.75,1</questionSimValue>

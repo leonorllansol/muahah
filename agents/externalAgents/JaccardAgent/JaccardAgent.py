@@ -1,8 +1,10 @@
+import os, sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from Agent import Agent
 
-
-class JaccardAgent:
-    def __init__(self,configs,indexval=''):
-        self.agentName = self.__class__.__name__
+class JaccardAgent(Agent):
+    def __init__(self,configs):
+        super(JaccardAgent, self).__init__(configs)
         self.questionSimValue = float(configs['questionSimValue'])
         self.answerSimValue = float(configs['answerSimValue'])
         self.normalizeUserInput = True
@@ -10,8 +12,9 @@ class JaccardAgent:
 
 
 
-    def requestAnswer(self,userInput,candidates):
-
+    def requestAnswer(self,userInput):
+        candidates = self.candidates
+        
         userInputWords = self.getWordSet(userInput)
         userInputWords_WoStopwords = self.getStringListWithoutStopWords(userInputWords)
         bestPairs = [candidates[0]]
@@ -44,7 +47,7 @@ class JaccardAgent:
                         bestPairs.append(c)
             except IndexError:
                 pass
-        
+
         return bestPairs
 
 

@@ -5,7 +5,7 @@ from whoosh.fields import Schema, TEXT, ID, NUMERIC
 from whoosh.qparser import QueryParser,OrGroup
 from dialog.SimpleQA import SimpleQA
 import configsparser
-
+from tqdm import tqdm
 
 
 
@@ -19,7 +19,9 @@ def createIndex(indexPath,corpusPath):
     index = create_in(indexPath, schema)
     indexWriter = index.writer()
     corpusQAs = subtitleCorpusReader(corpusPath)
-    for qa in corpusQAs:
+    print("Creating index for file " + corpusPath)
+    for i in tqdm(range(len(corpusQAs))):
+        qa = corpusQAs[i]
         indexWriter.add_document(question=qa.question, answer=qa.answer, normalizedquestion=qa.normalizedQuestion, normalizedanswer=qa.normalizedAnswer, diff=qa.diff)
 
     indexWriter.commit()

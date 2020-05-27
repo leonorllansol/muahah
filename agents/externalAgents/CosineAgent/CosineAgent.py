@@ -2,21 +2,24 @@ from collections import Counter
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy
-import time,sys
+import time
 
+import os, sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from Agent import Agent
 numpy.set_printoptions(threshold=sys.maxsize)
 
-class CosineAgent:
-    def __init__(self,configs,indexval=''):
-        self.agentName = self.__class__.__name__
+class CosineAgent(Agent):
+    def __init__(self,configs):
+        super(CosineAgent, self).__init__(configs)
         self.questionSimValue = float(configs['questionSimValue'])
         self.answerSimValue = float(configs['answerSimValue'])
         self.normalizeUserInput = True
 
 
 
-    def requestAnswer(self,userInput,candidates):
-
+    def requestAnswer(self,userInput):
+        candidates = self.candidates
         bestPairs = [candidates[0]]
 
 
@@ -34,8 +37,8 @@ class CosineAgent:
         answerCosineSims = cosine_similarity(aVectorizer.transform(answerVect).toarray())
 
         candidateCounter = 1
-        
-        
+
+
 
         for c in candidates:
 
@@ -44,7 +47,7 @@ class CosineAgent:
 
             finalScore = self.getFinalScore(questionScore,answerScore)
             c.addScore(self.agentName,finalScore)
-            
+
             try:
                 if(c.getAnswer()[len(c.getAnswer())-1] != '?' and c != bestPairs[0]):
                     if(c.getScoreByEvaluator(self.agentName) > bestPairs[0].getScoreByEvaluator(self.agentName)):

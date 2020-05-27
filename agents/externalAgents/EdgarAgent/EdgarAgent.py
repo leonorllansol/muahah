@@ -1,26 +1,29 @@
 import re
 from texttools import stopwords
 
+import os, sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from Agent import Agent
 
-class EdgarAgent:
+class EdgarAgent(Agent):
     def __init__(self,configs):
-        self.agentName = self.__class__.__name__
+        super(EdgarAgent, self).__init__(configs)
         self.corpusPath = configs['corpusPath']
         self.indexPath = configs['indexPath']
         self.threshold = float(configs['threshold'])
         self.stopwordsPath = configs['stopwords']
 
 
-    def requestAnswer(self,userInput,candidates):
-        
+    def requestAnswer(self,userInput):
+        candidates = self.candidates
         userInputWords = self.getWordSet(userInput)
         userInputWords_WoStopwords = self.getStringListWithoutStopWords(userInputWords)
-        
+
         if(len(candidates) > 0):
             bestPair = candidates[0]
 
             for c in candidates:
-            
+
                 questionWords = self.getWordSet(c.getNormalizedQuestion())
 
                 questionWords_WoStopwords = self.getStringListWithoutStopWords(questionWords)

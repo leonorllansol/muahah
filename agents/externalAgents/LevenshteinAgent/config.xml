@@ -2,7 +2,7 @@
 <config>
     <mainClass>LevenshteinAgent</mainClass>
     <agentAmount>1</agentAmount>
-    
+    <useWhoosh>true</useWhoosh>
     <variedParameters>questionSimValue,answerSimValue</variedParameters>
 
     <questionSimValue>0.5,0.75,1</questionSimValue>

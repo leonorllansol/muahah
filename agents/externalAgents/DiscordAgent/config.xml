@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
     <mainClass>DiscordAgent</mainClass>
+    <useWhoosh>false</useWhoosh>
     <jsonPath>/afs/l2f/home/lml/Documents/integratedMASystem/learningAgentData.json</jsonPath>
 </config>

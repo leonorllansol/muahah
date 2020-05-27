@@ -1,10 +1,13 @@
 import re
 from texttools import stopwords
 
+import os, sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from Agent import Agent
 
-class EdgarEngAgent:
+class EdgarEngAgent(Agent):
     def __init__(self,configs):
-        self.agentName = self.__class__.__name__
+        super(EdgarEngAgent, self).__init__(configs)
         self.corpusPath = configs['corpusPath']
         self.dbPath = configs['dbPath']
         self.indexPath = configs['indexPath']
@@ -12,16 +15,17 @@ class EdgarEngAgent:
         self.stopwordsPath = configs['stopwords']
 
 
-    def requestAnswer(self,userInput,candidates):
+    def requestAnswer(self,userInput):
+        candidates = self.candidates
         
         userInputWords = self.getWordSet(userInput)
         userInputWords_WoStopwords = self.getStringListWithoutStopWords(userInputWords)
-        
+
         if(len(candidates) > 0):
             bestPairs = [candidates[0]]
 
             for c in candidates:
-            
+
                 questionWords = self.getWordSet(c.getNormalizedQuestion())
 
                 questionWords_WoStopwords = self.getStringListWithoutStopWords(questionWords)

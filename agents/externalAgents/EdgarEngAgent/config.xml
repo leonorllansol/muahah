@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
     <mainClass>EdgarEngAgent</mainClass>
-    <corpusPath>corpus/edgar-eng</corpusPath>   
+    <corpusPath>corpus/edgar-eng</corpusPath>
     <indexPath>resources/whooshIndexes/edgar-eng</indexPath>
     <threshold>0.35</threshold>
+    <useWhoosh>true</useWhoosh>
     <stopwords>resources/stopwords/edgar_stop.txt</stopwords>
 </config>

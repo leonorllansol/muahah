@@ -1,13 +1,18 @@
 import re
 
+import os, sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from Agent import Agent
 
-class FaqsAgent:
+class FaqsAgent(Agent):
     def __init__(self,configs):
+        super(FaqsAgent, self).__init__(configs)
         self.agentName = self.__class__.__name__
         self.normalizeUserInput = True
-    
 
-    def requestAnswer(self,userInput,candidates):
+
+    def requestAnswer(self,userInput):
+        candidates = self.candidates
         
         userInputWords = self.getWordSet(userInput)
         bestPair = candidates[0]
@@ -18,7 +23,7 @@ class FaqsAgent:
 
             if(c.getScoreByEvaluator(self.agentName) > bestPair.getScoreByEvaluator(self.agentName)):
                 bestPair = c
-        
+
         return bestPair.getAnswer()
 
 
@@ -28,5 +33,3 @@ class FaqsAgent:
         #wordSet = set(tokenizedInput.split())
         wordSet = set(input.split())
         return wordSet
-
-

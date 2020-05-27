@@ -93,13 +93,13 @@ getPriorities
 
     <agents>
         <!-- external agents -->
-        <agent name="CosineAgent" active="0"/>
+        <agent name="CosineAgent" active="1"/>
         <agent name="EdgarAgent" active="0"/>
         <agent name="GrootAgent" active="0"/>
         <agent name="JaccardAgent" active="0"/>
         <agent name="LevenshteinAgent" active="0"/>
         <agent name="YesNoAgent" active="0"/>
-        <agent name="OrAgent" active="0"/>
+        <agent name="OrAgent" active="1"/>
         <agent name="GeneralAgent" active="1"/>
         <!-- internal agents -->
         <agent name="talkpedia" active="1"/>

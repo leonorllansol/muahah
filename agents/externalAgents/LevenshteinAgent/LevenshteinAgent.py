@@ -1,17 +1,22 @@
 import time
 import editdistance
 
-class LevenshteinAgent:
-    def __init__(self,configs,indexval=''):
-        self.agentName = self.__class__.__name__
+import os, sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from Agent import Agent
+
+
+class LevenshteinAgent(Agent):
+    def __init__(self,configs):
+        super(LevenshteinAgent, self).__init__(configs)
         self.questionSimValue = float(configs['questionSimValue'])
         self.answerSimValue = float(configs['answerSimValue'])
         self.normalizeUserInput = False
 
 
 
-    def requestAnswer(self,userInput,candidates):
-
+    def requestAnswer(self,userInput):
+        candidates = self.candidates
         t = time.time()
 
         userInputLower = userInput.lower()
@@ -30,7 +35,7 @@ class LevenshteinAgent:
             finalScore = self.getFinalScore(questionScore,answerScore)
             c.addScore(self.agentName,1/finalScore)
 
-            
+
             try:
                 if(c.getAnswer()[len(c.getAnswer())-1] != '?' and c != bestPairs[0]):
                     if(c.getScoreByEvaluator(self.agentName) > bestPairs[0].getScoreByEvaluator(self.agentName)):

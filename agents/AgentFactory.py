@@ -57,7 +57,6 @@ def createExternalAgents(externalAgentsPath):
                     else:
                         configs[x.tagName] = x.firstChild.data
 
-
         if(len(configs) > 0):
 
             mainClass = configs['mainClass']
@@ -91,8 +90,9 @@ def createExternalAgents(externalAgentsPath):
                     if(agentAmount > 1 and mainClass != 'GeneralAgent'):
                         agent.agentName += str(a+1)
 
-                    externalAgents.append(agent)
+                    agent.useWhoosh = True if agentConfigs['useWhoosh'] == 'true' else False
 
+                    externalAgents.append(agent)
     return externalAgents
 
 

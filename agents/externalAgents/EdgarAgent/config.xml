@@ -4,5 +4,6 @@
     <corpusPath>corpus/edgar/edgar.txt</corpusPath>
     <indexPath>resources/whooshIndexes/edgar</indexPath>
     <threshold>0.35</threshold>
+    <useWhoosh>true</useWhoosh>
     <stopwords>resources/stopwords/edgar_stop.txt</stopwords>
 </config>

@@ -14,8 +14,13 @@ from nltk.corpus import wordnet
 import nltk
 import pandas as pd
 import tfidf
-class GeneralAgent:
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from Agent import Agent
+
+class GeneralAgent(Agent):
     def __init__(self, configs, i):
+        # not doing super on purpose
         self.agentName = list(configs['corpusPath'].keys())[i]
         self.corpusPath = list(configs['corpusPath'].values())[i]
         self.indexPath = list(configs['indexPath'].values())[i]
@@ -52,7 +57,9 @@ class GeneralAgent:
     #             return list(set(lst)-set(word))
     #     return []
 
-    def requestAnswer(self, query, candidates, query_labels):
+    def requestAnswer(self, query, query_labels):
+        candidates = self.candidates
+        
         found_specific_label = False
         query_specific_label = ""
 
