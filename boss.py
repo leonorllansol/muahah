@@ -282,8 +282,9 @@ def getAnswer(query:str, firstCall: bool):
                 decisionMethodsWeights[strategy] /= (100 - previousWeight) / remainingWeights
     #print(decisionMethodsWeights)
 
-    for agent,answer in internalAgentsAnswers.items():
-        if isinstance(internalAgentsAnswers[agent], list) or len(internalAgentsAnswers[agent]) == 0:
+    for agent in internalAgentsAnswers:
+        #if isinstance(internalAgentsAnswers[agent], list) or len(internalAgentsAnswers[agent]) == 0:
+        if len(internalAgentsAnswers[agent]) == 0:
             # delete empty answers
             del internalAgentsAnswers[agent]
 

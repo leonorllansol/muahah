@@ -35,18 +35,22 @@ class LevenshteinAgent(Agent):
             finalScore = self.getFinalScore(questionScore,answerScore)
             c.addScore(self.agentName,1/finalScore)
 
-
             try:
                 if(c.getAnswer()[len(c.getAnswer())-1] != '?' and c != bestPairs[0]):
-                    if(c.getScoreByEvaluator(self.agentName) > bestPairs[0].getScoreByEvaluator(self.agentName)):
-                        bestPairs = [c]
-                    elif(c.getScoreByEvaluator(self.agentName) == bestPairs[0].getScoreByEvaluator(self.agentName)):
-                        bestPairs.append(c)
+                    bestPairs.append(c)
             except IndexError:
                 pass
-
-        return bestPairs
+        bestPairs.sort(key=lambda x: x.getScoreByEvaluator(self.agentName), reverse=True)
+        return bestPairs[:self.answerAmount]
 
 
     def getFinalScore(self,questionScore,answerScore):
         return questionScore * self.questionSimValue + answerScore * self.answerSimValue
+
+def getNormalizedError(sentence1, sentence2, score):
+    minimum = abs(len(sentence1) - len(sentence2))
+    maximum = max(len(sentence1), len(sentence2))
+    print("minimum:", minimum)
+    print("maximum:", maximum)
+    normalized = (score - minimum) / (maximum - minimum)
+    return normalized

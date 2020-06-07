@@ -76,57 +76,70 @@ class Decisor:
 
             # if all answers are escape sentences, I don't want to delete them
             flag = False
-            for ans in agentAnswers.values():
-                if not ans in list_of_escapings:
-                    flag = True
-            if not flag:
-                return agentAnswers
+            for answerList in agentAnswers.values():
+                for escaping in list_of_escapings:
+                    try:
+                        answerList.remove(escaping)
+                    except ValueError:
+                        pass
 
-
-            to_delete = []
-            for agent,answer in agentAnswers.items():
-                if answer in list_of_escapings:
-                    to_delete.append(agent)
-
-            for item in to_delete:
-                del agentAnswers[item]
             return agentAnswers
 
 
         print("query labels::{}".format(query_labels))
-
         mergedAgentAnswers = {**defaultAgentsAnswers, **externalAgentsAnswers}
-        answer_label_dict = {answer: [] for answer in mergedAgentAnswers.values()}
+
+        answer_label_dict = {}
+        for answerList in mergedAgentAnswers.values():
+            for answer in answerList:
+                answer_label_dict[answer] = []
+        #answer_label_dict = {answer: [] for answer in mergedAgentAnswers.values()}
 
         answer_by_strategy_dict = {}
 
         for agent, answer in mergedAgentAnswers.items():
-            print("Agente: " + agent + "; Resposta: \"" + answer + "\"" )
+            print("Agente: ", agent, "; Resposta: \"", answer, "\"" )
         print()
 
         mergedAgentAnswers = delete_escapings(mergedAgentAnswers)
 
+        
 
-        all_strategies = {"SimpleMajority": SimpleMajority, "PrioritySystem": PrioritySystem, "AgentMultiAnswers": AgentMultiAnswers, "PrioritySystemMultiAnswers": PrioritySystemMultiAnswers,
-                            "PrioritySystemDevelopmentMulti": PrioritySystemDevelopmentMulti, "AMAStrategy": AMAStrategy, "WeightedVote": WeightedVote, "query_agent": query_agent, "answer_impersonal": answer_impersonal, "query_answer": query_answer, "YesNoStrategy": YesNoStrategy, "OrStrategy": OrStrategy}
 
-        args_by_strategy = {"SimpleMajority": [mergedAgentAnswers], "PrioritySystem": [mergedAgentAnswers], "AgentMultiAnswers": [mergedAgentAnswers], "PrioritySystemMultiAnswers": [mergedAgentAnswers],
-                            "PrioritySystemDevelopmentMulti": [mergedAgentAnswers], "WeightedVote": [mergedAgentAnswers], "AMAStrategy": [mergedAgentAnswers], "query_agent": [query_labels, self.agents_dict, mergedAgentAnswers], "answer_impersonal": [mergedAgentAnswers, query_labels, answer_label_dict], "query_answer": [mergedAgentAnswers, query_labels, self.corpora_dict, answer_label_dict], "YesNoStrategy": [mergedAgentAnswers,query], "OrStrategy": [mergedAgentAnswers, query]}
+        all_strategies = {"SimpleMajority": SimpleMajority, "PrioritySystem": PrioritySystem,
+                        "AgentMultiAnswers": AgentMultiAnswers, "PrioritySystemMultiAnswers": PrioritySystemMultiAnswers,
+                        "PrioritySystemDevelopmentMulti": PrioritySystemDevelopmentMulti, "AMAStrategy": AMAStrategy,
+                        "WeightedVote": WeightedVote, "query_agent": query_agent, "answer_impersonal": answer_impersonal,
+                        "query_answer": query_answer, "YesNoStrategy": YesNoStrategy, "OrStrategy": OrStrategy}
+
+        # strategies that receive arguments other than the answers
+        extra_args_by_strategy = { "query_agent": [query_labels, self.agents_dict],
+                                "answer_impersonal": [query_labels, answer_label_dict],
+                                "query_answer": [query_labels, self.corpora_dict, answer_label_dict],
+                                "YesNoStrategy": [query], "OrStrategy": [query]}
 
         #if not 'PERSONAL' in query_labels:
             #del all_strategies["answer_personal"]
         if not 'IMPERSONAL' in query_labels:
             del all_strategies["answer_impersonal"]
 
+
+
         for strategyName, strategy in all_strategies.items():
+            answers = mergedAgentAnswers.copy()
             if self.decisionMethods[strategyName] > 0:
 
                 s = strategy(query) if strategyName == "answer_impersonal"  else strategy()
 
-                if answer_label_dict in args_by_strategy[strategyName]:
-                    answer_by_strategy_dict[strategyName], answer_label_dict = s.getAnswer(*args_by_strategy[strategyName])
+                if strategyName in extra_args_by_strategy:
+
+                    if answer_label_dict in extra_args_by_strategy[strategyName]:
+                        answer_by_strategy_dict[strategyName], answer_label_dict = s.getAnswer(answers, *extra_args_by_strategy[strategyName])
+                    else:
+                        answer_by_strategy_dict[strategyName] = s.getAnswer(answers, *extra_args_by_strategy[strategyName])
+
                 else:
-                    answer_by_strategy_dict[strategyName] = s.getAnswer(*args_by_strategy[strategyName])
+                        answer_by_strategy_dict[strategyName] = s.getAnswer(answers)
 
                 print("Usando o método " + strategyName + ", a resposta é \"" + answer_by_strategy_dict[strategyName] + "\".")
 

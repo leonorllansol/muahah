@@ -12,6 +12,7 @@ class EdgarAgent(Agent):
         self.indexPath = configs['indexPath']
         self.threshold = float(configs['threshold'])
         self.stopwordsPath = configs['stopwords']
+        self.error = 0.1
 
 
     def requestAnswer(self,userInput):
@@ -20,7 +21,7 @@ class EdgarAgent(Agent):
         userInputWords_WoStopwords = self.getStringListWithoutStopWords(userInputWords)
 
         if(len(candidates) > 0):
-            bestPair = candidates[0]
+            bestPairs = [candidates[0]]
 
             for c in candidates:
 
@@ -36,15 +37,22 @@ class EdgarAgent(Agent):
                 c.addScore(self.agentName,score)
                 #print(questionWords_WoStopwords, score)
 
-                if(c.getScoreByEvaluator(self.agentName) > bestPair.getScoreByEvaluator(self.agentName)):
-                    bestPair = c
+                bestPairs.append(c)
+
+                # if(c.getScoreByEvaluator(self.agentName) > bestPair.getScoreByEvaluator(self.agentName)):
+                #     bestPair = c
         else:
             return 'Não sei responder a isso'
 
-        if(bestPair.getScoreByEvaluator(self.agentName) > self.threshold):
-            return bestPair.getAnswer()
+        for c in bestPairs:
+            if(c.getScoreByEvaluator(self.agentName) < self.threshold):
+                bestPairs.remove(c)
+
+        if len(bestPairs) > 0:
+            bestPairs.sort(key=lambda x: x.getScoreByEvaluator(self.agentName), reverse=True)
+            return bestPairs[:self.answerAmount]
         else:
-            return 'Não sei responder a isso'
+            return ['Não sei responder a isso']
 
 
 

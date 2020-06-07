@@ -14,7 +14,7 @@ class JaccardAgent(Agent):
 
     def requestAnswer(self,userInput):
         candidates = self.candidates
-        
+
         userInputWords = self.getWordSet(userInput)
         userInputWords_WoStopwords = self.getStringListWithoutStopWords(userInputWords)
         bestPairs = [candidates[0]]
@@ -41,14 +41,16 @@ class JaccardAgent(Agent):
 
             try:
                 if(c.getAnswer()[len(c.getAnswer())-1] != '?' and c != bestPairs[0]):
-                    if(c.getScoreByEvaluator(self.agentName) > bestPairs[0].getScoreByEvaluator(self.agentName)):
-                        bestPairs = [c]
-                    elif(c.getScoreByEvaluator(self.agentName) == bestPairs[0].getScoreByEvaluator(self.agentName)):
-                        bestPairs.append(c)
+                # if(c != bestPairs[0]):
+                #     if(c.getScoreByEvaluator(self.agentName) > bestPairs[0].getScoreByEvaluator(self.agentName)):
+                #         bestPairs = [c]
+                #     elif(c.getScoreByEvaluator(self.agentName) == bestPairs[0].getScoreByEvaluator(self.agentName)):
+                #         bestPairs.append(c)
+                    bestPairs.append(c)
             except IndexError:
                 pass
-
-        return bestPairs
+        bestPairs.sort(key=lambda x: x.getScoreByEvaluator(self.agentName), reverse=True)
+        return bestPairs[:self.answerAmount]
 
 
 

@@ -11,18 +11,17 @@ class answer_impersonal(DecisionMethod):
         self.query = query
 
     def getAnswer(self, answers, query_labels, answer_label_dict):
-        list_of_answers = [a for a in answers.values()]
+        list_of_answers = [a[0] for a in answers.values()]
         temp_score_dict = {answer: 0.0 for answer in list_of_answers}
         li_roth = get_li_roth_labels(query_labels)
 
         temp_dict = {answer: impersonal_answers.answer_classification(self.query, li_roth[0], li_roth[1], answer)
                         for answer in list_of_answers}
 
-
         for answer, score in temp_dict.items():
-            if temp_dict[answer][0]:
-                answer_label_dict[answer] += temp_dict[answer][0]
-                answer_label_dict[answer] = list(set(answer_label_dict[answer]))
+            if temp_dict[answer]:
+                answer_label_dict[answer] += temp_dict[answer]
+                #answer_label_dict[answer] = list(set(answer_label_dict[answer]))
 
         for answer, score in temp_dict.items():
             temp_score_dict[answer] += temp_dict[answer][1]

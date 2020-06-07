@@ -46,4 +46,4 @@ class OrAgent(Agent):
         else:
             finalAnswer = ""
 
-        return finalAnswer
+        return [finalAnswer]

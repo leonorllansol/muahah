@@ -86,7 +86,7 @@ class AgentHandler:
             # if not flag:
             #     continue
 
-
+            agent.setAnswerAmount(configsparser.getAnswerAmount())
             agentTime = time.time()
 
             try:
@@ -133,23 +133,30 @@ class AgentHandler:
 
 
             try:
+                print("ANSWER:",answer,"\n")
                 if(answer == [] or answer == ""):
-                    agentAnswers[agent.agentName] = configsparser.getNoAnswerMessage()
+                    agentAnswers[agent.agentName] = [configsparser.getNoAnswerMessage()]
                 else:
                     agentAnswers[agent.agentName] = answer
             except IndexError:
-                agentAnswers[agent.agentName] = configsparser.getNoAnswerMessage()
+                agentAnswers[agent.agentName] = [configsparser.getNoAnswerMessage()]
 
             #print(agent.agentName + " execution time: " + str(time.time() - agentTime))
 
+        # for agent, answer in agentAnswers.items():
+        #     if type(answer) is list:
+        #         if not (type(answer[0]) is str):
+        #             agentAnswers[agent] = answer[0].getAnswer()
+        #         else:
+        #             agentAnswers[agent] = answer[0]
+        #     else:
+        #         agentAnswers[agent] = answer
+
         for agent, answer in agentAnswers.items():
-            if type(answer) is list:
-                if not (type(answer[0]) is str):
-                    agentAnswers[agent] = answer[0].getAnswer()
-                else:
-                    agentAnswers[agent] = answer[0]
+            if type(answer) is str:
+                agentAnswers[agent] = [answer]
             else:
-                agentAnswers[agent] = answer
+                agentAnswers[agent] = [a.getAnswer() for a in answer]
 
         return agentAnswers, candidateQueryDict
 
@@ -191,6 +198,9 @@ class AgentHandler:
                 p.start()
         for t in pros:
             t.join()
+
+        for agent, answer in answers.items():
+            answers[agent] = [answer]
         return answers
 
 

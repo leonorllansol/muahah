@@ -24,7 +24,7 @@ class YesNoAgent(Agent):
         # TODO ver se há respostas nos candidates que contenham Sim, Não, Talvez
         finalAnswer = random.choice(possibleAnswers)
 
-        return finalAnswer
+        return [finalAnswer]
 
 
     def getFinalScore(self,questionScore,answerScore):

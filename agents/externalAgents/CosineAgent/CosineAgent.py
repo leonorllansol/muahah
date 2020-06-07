@@ -15,7 +15,7 @@ class CosineAgent(Agent):
         self.questionSimValue = float(configs['questionSimValue'])
         self.answerSimValue = float(configs['answerSimValue'])
         self.normalizeUserInput = True
-
+        self.error = 0.1
 
 
     def requestAnswer(self,userInput):
@@ -46,22 +46,22 @@ class CosineAgent(Agent):
             answerScore = answerCosineSims[0][candidateCounter]
 
             finalScore = self.getFinalScore(questionScore,answerScore)
-            c.addScore(self.agentName,finalScore)
 
+            c.addScore(self.agentName,finalScore)
             try:
                 if(c.getAnswer()[len(c.getAnswer())-1] != '?' and c != bestPairs[0]):
-                    if(c.getScoreByEvaluator(self.agentName) > bestPairs[0].getScoreByEvaluator(self.agentName)):
-                        bestPairs = [c]
-                    elif(c.getScoreByEvaluator(self.agentName) == bestPairs[0].getScoreByEvaluator(self.agentName)):
-                        bestPairs.append(c)
+                    # if(c.getScoreByEvaluator(self.agentName) > bestPairs[0].getScoreByEvaluator(self.agentName)):
+                    #     bestPairs = [c]
+                    # elif(c.getScoreByEvaluator(self.agentName) == bestPairs[0].getScoreByEvaluator(self.agentName)):
+                    #     bestPairs.append(c)
+                    bestPairs.append(c)
             except IndexError:
                 pass
 
-
-
             candidateCounter += 1
 
-        return bestPairs
+        bestPairs.sort(key=lambda x: x.getScoreByEvaluator(self.agentName), reverse=True)
+        return bestPairs[:self.answerAmount]
 
 
     def getFinalScore(self,questionScore,answerScore):

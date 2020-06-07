@@ -17,6 +17,9 @@ class PrioritySystem(DecisionMethod):
         answerFrequency = {}
 
         for agent in answers.keys():
+            if(type(answers[agent]) is list):
+                answers[agent] = answers[agent][0]
+                
             if(finalAnswer == ""):
                 finalAnswer = (answers[agent],self.getPriority(agent,priorities))
                 answerFrequency[answers[agent]] = answerFrequency.get(answers[agent],0) + 1

@@ -14,7 +14,13 @@ import configsparser, dialog
 class SimpleMajority(DecisionMethod):
     # Given a set of answers, delivers the most frequent answer to the user
 
+
     def getAnswer(self, answers):
+        # Parameters:
+        #   answers (dict):  {agent: [answer1, ..., answerN]}
+        #
+        # Returns:
+        #   answer (str)
         answerFrequency = {}
         try:
             for agent in answers.keys():
