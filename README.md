@@ -41,7 +41,7 @@ This process is accomplished through the use of four modules:
 ## Agents
   - Each agent receives the user query and returns an answer.
   - There are two kinds of agents which can be added:
-  	- If your agent takes the candidates retrieved by Whoosh using the SubTle corpus and uses some metric to choose the best one, you will create an **External Agent**.
+  	- If your agent takes the candidates retrieved by Whoosh using the SubTle corpus and uses some metric to choose the best one, you will create an **External Agent**, which must extend the abstract superclass **Agent** and thus implement the method requestAnswer(query), which returns the agent's answer.
 	- If your agent uses a different corpus, you will create an instance of a **General Agent**.
   - The following external agents are available:
   	- Cosine  
@@ -131,11 +131,13 @@ This process is accomplished through the use of four modules:
 
     <config>
         <mainClass>agentName</mainClass>
+	<useWhoosh>true/false</useWhoosh>
         (other parameters to define)
         (...)
     </config>
 
-All defined parameters must be encapsulated by the exterior tag `<config>`, and the `<mainClass>`must be defined with the same name as the main class of the agent.
+All defined parameters must be encapsulated by the exterior tag `<config>`, and the `<mainClass>` must be defined with the same name as the main class of the agent. 
+If the agent uses the search engine Whoosh to retrieve its answer candidates, the value of `<useWhoosh>` must be `true`. Otherwise, it must be `false`.
   ##### 4. Source Code
   As mentioned before, an agent can have more than one source file, but it must have a **main** source file. The main file usually has the same name as the agent's folder, and it corresponds to the connection point between chatuga-sss and the agent.
 
