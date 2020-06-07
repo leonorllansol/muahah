@@ -68,7 +68,7 @@ boss
     query_answer                        The labels of the agent's answer are compared with the labels of the query, obtained from a machine learning module.
 getPriorities
 
-    answerAmount: Number of answers to be delivered to the user (1 is the default); this parameter is only considered if the PrioritySystemDevelopmentMulti decision method is active.
+    answerAmount: Number of answers to be delivered to the user (1 is the default);
 
   -->
 
