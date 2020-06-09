@@ -36,21 +36,18 @@ This process is accomplished through the use of four modules:
   
   ![Architecture](https://github.com/leonorllansol/chatuga-sss/blob/master/images/highLevelArchi.jpg)
   
-  When the user poses a query to the **Boss**, the query is sent to every **agent**. Each agent returns an answer. The set of answers returned by all agents is passed to each **decision making strategy**, which chooses one to return to the **Boss**, based on its heuristic. The Boss receives the set of answers returned by all strategies, and chooses one to return to the user based on its confidence on each strategy.
+  When the user poses a query to the **Boss**, the query is sent to the AgentHandler, who forwards it to every **agent**. Each agent returns a list with one or more answers. The set of answers returned by all agents is passed to each **decision making strategy**, which chooses one to return to the **Boss**, based on its heuristic. The Boss receives the set of answers returned by all strategies, and chooses one to return to the user based on its confidence on each strategy.
   
 ## Agents
-  - Each agent receives the user query and returns an answer.
+  - Each agent receives the user query and returns a list of answers, with one or more answers. The number of answers to be returned by each agent is defined in the configuration file `config/config.xml` - `<answerAmount>`.
   - There are two kinds of agents which can be added:
-  	- If your agent takes the candidates retrieved by Whoosh using the SubTle corpus and uses some metric to choose the best one, you will create an **External Agent**, which must extend the abstract superclass **Agent** and thus implement the method requestAnswer(query), which returns the agent's answer.
+  	- If your agent takes the candidates retrieved by Whoosh using the SubTle corpus and uses some metric to choose the best one, you will create an **External Agent**, which must extend the abstract superclass **Agent** and thus implement the method *requestAnswer(query)*, which returns the agent's answer.
 	- If your agent uses a different corpus, you will create an instance of a **General Agent**.
   - The following external agents are available:
   	- Cosine  
-	- Discord
 	- Edgar
-	- Faqs
 	- Groot
 	- Jaccard
-	- KMeans
 	- Levenshtein
 	- Or
 	- Yes No
@@ -155,7 +152,7 @@ That said, the following indications must be followed when creating a new agent:
             └── SimpleQA.py
   
 ## Decision Making Strategies
-  - Each strategy receives the set of answers given by all agents, and returns one to the Boss, according to its heuristic.
+  - Each strategy receives the set of answers given by all agents, in the form {agent1: [answer1, ... answerN], ..., agentN: [answer1, ... answerN]}, and returns one to the Boss, according to its heuristic.
   - The available Decision Making Strategies are:
   	- Simple Majority - chooses more frequent answer
 	- Priority System - chooses the answer of the agent with highest priority
@@ -165,11 +162,11 @@ That said, the following indications must be followed when creating a new agent:
 	- Query Agent - chooses the answer of the agent whose domain is the same as the query domain
 	- Answers Impersonal - chooses an answer classified as impersonal
 	- Query Answer - chooses the answer that is closer to the question
-  - Each strategy has a weight associated, which can be changed in the `config/config.xml`.
+  - Each strategy has a weight associated, which is used by the Boss to choose the final answer to be returned to the user. It can be changed in the `config/config.xml`.
 	
 ### Adding a new Decision Making Strategy:
   - Given a set of answers, a Decision Making Strategy chooses one of them, according to its heuristics. For example, SimpleMajority chooses the most given answer, and YesNoStrategy chooses an answer which contains "yes" or "no".
-  - 1. A decision making strategy can be implemented in a single file: in folder decisionMakingStrategies, create a new subclass of DecisionMethod. This class **must** have a method getAnswer, which returns an answer.
+  - 1. A decision making strategy can be implemented in a single file: in folder decisionMakingStrategies, create a new subclass of DecisionMethod. This class **must** have a method *getAnswer*, which returns an answer.
   - 2. Add the name of the new class and corresponding class and arguments to, respectively, the dictionaries all_strategies and args_by_strategy of Decisor.py.
   - 3. add it to the config.xml file (tag `<decisionMethod>`) and give it a weight, considering that all weights must sum to 100.
   
