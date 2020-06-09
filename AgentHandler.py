@@ -126,8 +126,12 @@ class AgentHandler:
                         answer, candidateQueryDict[agent.agentName] = agent.requestAnswer(query, query_labels)
                     else:
                         answer = agent.requestAnswer(query)
+                # TODO deve ser aqui
                 else:
-                    answer = configsparser.getNoAnswerMessage()
+                    if not agent.useWhoosh:
+                        answer = agent.requestAnswer(query)
+                    else:
+                        answer = configsparser.getNoAnswerMessage()
 
 
 
