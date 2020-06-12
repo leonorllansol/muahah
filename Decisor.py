@@ -2,24 +2,12 @@ import  operator
 import configsparser
 import sys, logging
 import dialog
+import importlib
 # import personal_answers
 import classificationAndMatching.classification as classification
 import classificationAndMatching.query_agent_label_match as query_agent_label_match
 import classificationAndMatching.query_answer_label_match as query_answer_label_match
 
-from decisionMakingStrategies.SimpleMajority import SimpleMajority
-from decisionMakingStrategies.PrioritySystem import PrioritySystem
-from decisionMakingStrategies.AgentMultiAnswers import AgentMultiAnswers
-from decisionMakingStrategies.PrioritySystemMultiAnswers import PrioritySystemMultiAnswers
-from decisionMakingStrategies.PrioritySystemDevelopmentMulti import PrioritySystemDevelopmentMulti
-from decisionMakingStrategies.WeightedVote import WeightedVote
-from decisionMakingStrategies.query_agent import query_agent
-#from decisionMakingStrategies.answer_personal import answer_personal
-from decisionMakingStrategies.answer_impersonal import answer_impersonal
-from decisionMakingStrategies.query_answer import query_answer
-from decisionMakingStrategies.YesNoStrategy import YesNoStrategy
-from decisionMakingStrategies.OrStrategy import OrStrategy
-from decisionMakingStrategies.AMAStrategy import AMAStrategy
 
 """
 The Decisor class is responsible for deciding the best answer per strategy.
@@ -103,14 +91,6 @@ class Decisor:
 
         mergedAgentAnswers = delete_escapings(mergedAgentAnswers)
 
-        
-
-
-        all_strategies = {"SimpleMajority": SimpleMajority, "PrioritySystem": PrioritySystem,
-                        "AgentMultiAnswers": AgentMultiAnswers, "PrioritySystemMultiAnswers": PrioritySystemMultiAnswers,
-                        "PrioritySystemDevelopmentMulti": PrioritySystemDevelopmentMulti, "AMAStrategy": AMAStrategy,
-                        "WeightedVote": WeightedVote, "query_agent": query_agent, "answer_impersonal": answer_impersonal,
-                        "query_answer": query_answer, "YesNoStrategy": YesNoStrategy, "OrStrategy": OrStrategy}
 
         # strategies that receive arguments other than the answers
         extra_args_by_strategy = { "query_agent": [query_labels, self.agents_dict],
@@ -118,18 +98,21 @@ class Decisor:
                                 "query_answer": [query_labels, self.corpora_dict, answer_label_dict],
                                 "YesNoStrategy": [query], "OrStrategy": [query]}
 
-        #if not 'PERSONAL' in query_labels:
-            #del all_strategies["answer_personal"]
-        if not 'IMPERSONAL' in query_labels:
-            del all_strategies["answer_impersonal"]
 
+        for strategyName, weight in self.decisionMethods.items():
+            if strategyName == 'answer_impersonal' and not 'IMPERSONAL' in query_labels:
+                continue
+            # if strategyName == 'answer_personal' and not 'PERSONAL' in query_labels:
+            #     continue
+            mainClass = strategyName
+            module = importlib.import_module('.' + mainClass,'decisionMakingStrategies')
+            class_ = getattr(module,mainClass)
 
-
-        for strategyName, strategy in all_strategies.items():
             answers = mergedAgentAnswers.copy()
+
             if self.decisionMethods[strategyName] > 0:
 
-                s = strategy(query) if strategyName == "answer_impersonal"  else strategy()
+                s = class_(query) if strategyName == "answer_impersonal"  else class_()
 
                 if strategyName in extra_args_by_strategy:
 
