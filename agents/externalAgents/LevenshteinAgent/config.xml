@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
     <mainClass>LevenshteinAgent</mainClass>
-    <agentAmount>1</agentAmount>
+    <agentAmount>3</agentAmount>
     <useWhoosh>true</useWhoosh>
     <variedParameters>questionSimValue,answerSimValue</variedParameters>
 

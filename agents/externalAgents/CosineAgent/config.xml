@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
     <mainClass>CosineAgent</mainClass>
-    <agentAmount>1</agentAmount>
+    <agentAmount>3</agentAmount>
     <stopwords>resources/stopwords/edgar_stop.txt</stopwords>
     <useWhoosh>true</useWhoosh>
     <variedParameters>questionSimValue,answerSimValue</variedParameters>

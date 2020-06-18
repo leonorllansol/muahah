@@ -11,9 +11,7 @@ import classificationAndMatching.query_agent_label_match as query_agent_label_ma
 
 class query_agent(DecisionMethod):
     # The labels of the agent's domain of expertise are compared with the labels of the query, obtained from a machine learning module.
-
     def getAnswer(self, defaultAgentsAnswers, query_labels, agents_dict):
-        print(defaultAgentsAnswers)
         for agent in defaultAgentsAnswers:
             if(type(defaultAgentsAnswers[agent]) is list):
                 defaultAgentsAnswers[agent] = defaultAgentsAnswers[agent][0]

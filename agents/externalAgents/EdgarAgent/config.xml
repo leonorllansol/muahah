@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
     <mainClass>EdgarAgent</mainClass>
-    <corpusPath>corpus/edgar/edgar.txt</corpusPath>
+    <corpusPath>corpora/edgar/edgar.txt</corpusPath>
     <indexPath>resources/whooshIndexes/edgar</indexPath>
     <threshold>0.35</threshold>
     <useWhoosh>true</useWhoosh>

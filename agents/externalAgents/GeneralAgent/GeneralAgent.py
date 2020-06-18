@@ -59,7 +59,7 @@ class GeneralAgent(Agent):
 
     def requestAnswer(self, query, query_labels):
         candidates = self.candidates
-        
+
         found_specific_label = False
         query_specific_label = ""
 
@@ -123,16 +123,18 @@ class GeneralAgent(Agent):
                     if len(self.context) > 1 and answer_covid_label == self.context[-2]:
                         top_candidates_same_label.append(c)
                 if len(top_candidates_same_label) == 0:
-                    return top_candidates[0].getAnswer(), top_candidates[0].getQuestion()
+                    return [top_candidates[i] for i in range(min(len(top_candidates),self.answerAmount))]
                 else:
-                    return top_candidates_same_label[0].getAnswer(), top_candidates_same_label[0].getQuestion()
+                    return [top_candidates_same_label[i] for i in range(min(len(top_candidates_same_label),self.answerAmount))]
 
             else:
-                return top_candidates[0].getAnswer(), top_candidates[0].getQuestion()
+                return [top_candidates[i].getAnswer() for i in range(min(len(top_candidates),self.answerAmount))]
         else:
-            return 'Não sei responder a isso', ""
+            # 'Não sei responder a isso'
+            return []
 
-        return bestPair.getAnswer(), bestPair.getQuestion()
+        # chega aqui?
+        #return bestPair.getAnswer(), bestPair.getQuestion()
 
 
     def getDistance(self, querySetNoStopwords, candidateSetNoStopwords, candidateQuestion):

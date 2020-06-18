@@ -109,7 +109,8 @@ class AgentHandler:
                         if agent.useWhoosh:
                             candidates = DocumentManager.generateCandidates(query,indexPath=agent.indexPath,corpusPath=agent.corpusPath, synonymsPath=synonymsPath, acronymsPath=acronymsPath)
                             agent.setCandidates(candidates)
-                        answer, candidateQueryDict[agent.agentName] = agent.requestAnswer(query, query_labels)
+                        answer = agent.requestAnswer(query, query_labels)
+                        candidateQueryDict[agent.agentName] = answer.getQuestion()
                     else:
                         if agent.useWhoosh:
                             candidates = DocumentManager.generateCandidates(query,indexPath=agent.indexPath,corpusPath=agent.corpusPath)
@@ -126,7 +127,6 @@ class AgentHandler:
                         answer, candidateQueryDict[agent.agentName] = agent.requestAnswer(query, query_labels)
                     else:
                         answer = agent.requestAnswer(query)
-                # TODO deve ser aqui
                 else:
                     if not agent.useWhoosh:
                         answer = agent.requestAnswer(query)
@@ -137,7 +137,6 @@ class AgentHandler:
 
 
             try:
-                print("ANSWER:",answer,"\n")
                 if(answer == [] or answer == ""):
                     agentAnswers[agent.agentName] = [configsparser.getNoAnswerMessage()]
                 else:
@@ -157,7 +156,7 @@ class AgentHandler:
         #         agentAnswers[agent] = answer
 
         for agent, answer in agentAnswers.items():
-            if type(answer) is str:
+            if type(answer[0]) is str:
                 agentAnswers[agent] = [answer]
             else:
                 agentAnswers[agent] = [a.getAnswer() for a in answer]
