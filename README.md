@@ -167,7 +167,7 @@ That said, the following indications must be followed when creating a new agent:
 ### Adding a new Decision Making Strategy:
   - Given a set of answers, a Decision Making Strategy chooses one of them, according to its heuristics. For example, SimpleMajority chooses the most given answer, and YesNoStrategy chooses an answer which contains "yes" or "no".
   - 1. A decision making strategy can be implemented in a single file: in folder decisionMakingStrategies, create a new subclass of DecisionMethod. This class **must** have a method *getAnswer*, which returns an answer.
-  - 2. Add the name of the new class and corresponding class and arguments to, respectively, the dictionaries all_strategies and args_by_strategy of Decisor.py.
+  - 2. If the *getAnswer* method has extra arguments other than the agents' answers, add the name of the DecisionMethod and a list of the extra arguments to the dictionary *extra_args_by_strategy* in Decisor.py (line 96).
   - 3. add it to the config.xml file (tag `<decisionMethod>`) and give it a weight, considering that all weights must sum to 100.
   
 ## Project configurations
