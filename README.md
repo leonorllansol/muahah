@@ -1,10 +1,10 @@
-# chatuga-sss
+# MUAHAH
 
 ## What is it?
 
 Say Something Smart (SSS) is a dialogue engine based on a large corpus of movie subtitles (Subtle). 
 
-This specific project - chatuga-SSS - is focused on the implementation of a plug-and-play system composed by multiple distinct agents: each agent gives its own response to the received user input, and the best answer is reached through a set of different decision making strategies.
+This specific project - MUAHAH - Multi-Agents Hand-in-Hand platform - is focused on the implementation of a plug-and-play system composed by multiple distinct agents: each agent gives its own response to the received user input, and the best answer is reached through a set of different decision making strategies.
 
 
 ## How does it work?
